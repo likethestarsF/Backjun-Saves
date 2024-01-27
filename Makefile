@@ -3,7 +3,7 @@ all: main
 CXX = clang++
 override CXXFLAGS += -g -Wmost -Werror
 
-SRCS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.cpp' -print | sed -e 's/ /\\ /g')
+SRCS = $(shell find . \( -name '.ccls-cache' -o -name 'History' \) -type d -prune -o -type f -name '*.cpp' -print | sed -e 's/ /\\ /g')
 HEADERS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.h' -print)
 
 main: $(SRCS) $(HEADERS)
