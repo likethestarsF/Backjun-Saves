@@ -1,48 +1,35 @@
-// 240127
-// 12
-// #1978
+// 240128
+// 2
+// #4153
+#include <algorithm>
 #include <iostream>
 #include <string>
 using namespace std;
 
 void body() {
-  // input
-  int n;
-  cin >> n;
-  string *a = new string[n];
-  bool *b = new bool[n];
-  for (int i = 0; i < n; i++)
-    cin >> a[i];
-
-  // process
-  for (int i = 0; i < n; i++) {
-    int val = 0;
-    for (const char &c : a[i]) {
-      if (c == '(') {
-        val++;
-      } else if (c == ')') {
-        val--;
-      }
-      if (val < 0) {
-        break;
-      }
+  while (1) {
+    // input
+    int a[3];
+    cin >> a[0] >> a[1] >> a[2];
+    if (a[0] == 0 && a[1] == 0 && a[2] == 0) {
+      break;
     }
-    val == 0 ? b[i] = true : b[i] = false;
-  }
 
-  // output
-  for (int i = 0; i < n; i++)
-    if (b[i])
-      cout << "YES" << '\n';
-    else
-      cout << "NO" << '\n';
+    // process
+    clog << *a << ' ' << *(a + 1);
+    sort(a, a + 2);
+    bool tf = a[2] * a[2] == a[0] * a[0] + a[1] * a[1];
+
+    // output
+    tf ? cout << "right\n" : cout << "wrong\n";
+  }
 }
 
 int main() {
   /* cin optimize */
   ios_base ::sync_with_stdio(false);
-  // cin.tie(NULL);
-  // cout.tie(NULL);
+  cin.tie(NULL);
+  cout.tie(NULL);
 
   /* clog switch */
   std::clog.setstate(std::ios_base::failbit);
