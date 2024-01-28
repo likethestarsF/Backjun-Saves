@@ -1,6 +1,4 @@
-// 240127
-// 9
-// #10250
+// 240127 9 #10250
 #include <array>
 #include <iostream>
 #include <string>

@@ -1,6 +1,4 @@
-// 240128
-// 3
-// #1259
+// 240128 3 #1259
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -9,19 +7,24 @@ using namespace std;
 void body() {
   while (1) {
     // input
-    int a[3];
-    cin >> a[0] >> a[1] >> a[2];
-    if (a[0] == 0 && a[1] == 0 && a[2] == 0) {
+    string n;
+    cin >> n;
+    if (n == "0") {
       break;
     }
 
     // process
-    sort(a, a + 3);
-    clog << *a << *(a + 1) << *(a + 2) << '\n';
-    bool tf = a[2] * a[2] == a[0] * a[0] + a[1] * a[1];
+    bool tf = 1;
+    int len = n.length();
+    for (int i = 0; i < len / 2; i++) {
+      if (n[i] != n[len - 1 - i]) {
+        tf = 0;
+        break;
+      }
+    }
 
     // output
-    tf ? cout << "right\n" : cout << "wrong\n";
+    tf ? cout << "yes\n" : cout << "no\n";
   }
 }
 

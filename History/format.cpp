@@ -1,4 +1,4 @@
-// date num #eg num
+// date num #eg
 #include <iostream>
 #include <string>
 using namespace std;

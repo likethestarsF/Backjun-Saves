@@ -1,6 +1,4 @@
-// 240128
-// 1
-// #2798
+// 240128 1 #2798
 #include <iostream>
 #include <string>
 using namespace std;
