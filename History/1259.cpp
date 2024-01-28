@@ -1,6 +1,6 @@
 // 240128
-// 2
-// #4153
+// 3
+// #1259
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -16,8 +16,8 @@ void body() {
     }
 
     // process
-    clog << *a << ' ' << *(a + 1);
-    sort(a, a + 2);
+    sort(a, a + 3);
+    clog << *a << *(a + 1) << *(a + 2) << '\n';
     bool tf = a[2] * a[2] == a[0] * a[0] + a[1] * a[1];
 
     // output
