@@ -3,7 +3,13 @@
 #include <string>
 using namespace std;
 
-void body() {}
+void body() {
+  // input
+
+  // process
+
+  // output
+}
 
 int main() {
   /* cin optimize */
