@@ -1,6 +1,22 @@
 # Notepad
 ## Personal Notes.
-### 
+### Override operators in struct.
+can be used in sorting.
+https://best-coding.tistory.com/6
+```
+struct Data {
+  int id;
+  int p;
+  int num;
+  
+  //p가 같다면 id가 작을수록. p, id this-> 생략된 것.
+  bool operator < (const Data &var) const {
+    if (p == var.p) 
+      return id < var.id;
+    return p > var.p;
+  }
+};
+```
 
 ## Useful codes
 ### optimize iostream
