@@ -18,7 +18,7 @@ int main() {
   // cout.tie(NULL);
 
   /* clog switch */
-  std::clog.setstate(std::ios_base::failbit);
+  // std::clog.setstate(std::ios_base::failbit);
 
   body();
 }
