@@ -1,7 +1,11 @@
 # Notepad
-## Personal Notes.
+
+# Personal Notes.
+
 Useful site : https://modoocode.com/
-### Override operators in struct.
+
+## Override operators in struct.
+
 can be used in sorting.
 https://best-coding.tistory.com/6
 ```
@@ -18,16 +22,19 @@ struct Data {
   }
 ;
 ```
-### Vector 101
+
+## Vector 101
 `vector<typename> v;`
 
-iterators 
+### iterators 
 
 `v.begin()` : Pointer that directs first elem.
 
 `v.end()` : Pointer that directs not the end of vector, but the data after the end.
 
 `v.begin() == v.end()` It means element of vector is none.
+
+### Elements
 
 `v.push_back(elem)` : Add an element at the end of vector.
 
@@ -37,19 +44,45 @@ iterators
 
 `v.erase(location) : Delete an element at the location where we want to remove.
 
+## Lambda Function
+
+### Basic Description
+
+`[my_mod] (int v_) ->int {return v_ % my_mod;}`
+
+`my_mod` : introducer; write external variables.
+
+`(int v_)` : parameters; Write variables used in statement.
+
+`->int` : return type.
+
+`{}` : statement.
+
+`()` can be skipped but `[]` can not.
+
+1. `[&] () {}` : Call all external variables. (cf. `Call-by-reference`)
+2. `[=] () {}` : Call all external variables as value.
+3. `[=, &x, &y] () {}`
+4. `[x, &y, &z] () {}`
+
+`mutable ->type_name` : can be modify captured value.
 
 <details>
   
   <summary>Useful methods for the code tests</summary>
   
   ## Useful methods for code tests
+  
   ### optimize iostream
+  
   ```
   ios_base ::sync_with_stdio(false);
   cin.tie(NULL);
   // cout.tie(NULL);
   ```
+  
   ### clog switch
+  
   ```
   std::clog.setstate(std::ios_base::failbit);
   ```
@@ -57,23 +90,30 @@ iterators
 </details>
 
 <details>
-    <summary> Modularity </summary>
+  
+  <summary> Modularity </summary>
+  
   ## Modularity
+  
   ### Function
+  
   - can do overload. 
   ```
   int sum(int a, int b);
   int sum(int a, int b, int c);
   ```
+  
   - Call by Value Vs. Call by Reference
   `int a` vs. `int &a`
   
   ### Template
+  
   - `Any` Can be an any word: T, sometype, and so on.
   ```
   template <class Any>
   Any fn(Any a, Any b);
   ```
+  
   - `template <class T, class U>` is possible. (Multiple Parameters)
   
   - Non-type template Arguments
@@ -83,10 +123,12 @@ iterators
     return a * n;
   }
   ```
+  
   `cout << fixed_multiply<int, 2>(10);`
   output : `20`
   
   ### Namespace
+  
   ```
   namespace foo  { int value() {return 5;} }
   namespace bar  { int value() {return 10;} }
@@ -96,8 +138,8 @@ iterators
   
   using namespace is possible. e.g. `using namespace foo;`
   
-  
   ### Structure
+  
   - Basic
   ```
   struct Vector {
@@ -105,10 +147,12 @@ iterators
     double *elem;
   } // two members
   ```
+  
   Define a structure variable;
   ```
   Name v;
   ```
+  
   Accessing a member of __.
   ```
   v.sz = s;
@@ -124,6 +168,7 @@ iterators
   ```
   
   ### Classes
+  
   - Basic
   ```
   class class_name {
