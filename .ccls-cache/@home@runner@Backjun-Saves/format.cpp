@@ -1,12 +1,14 @@
 // date num #eg
+#include <algorithm>
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 void body() {
   // input
 
-  // process
+  //  process
 
   // output
 }
