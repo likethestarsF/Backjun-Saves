@@ -32,8 +32,8 @@ void body() {
        });
 
   // output
-  for (const auto &i : a) {
-    cout << get<1>(i) << ' ' << get<2>(i) << '\n';
+  for (int i = 0; i < n; i++) {
+    cout << get<1>(a[i]) << ' ' << get<2>(a[i]) << '\n';
   }
 }
 
