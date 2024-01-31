@@ -1,7 +1,7 @@
 // 240131 4 #2164
 #include <algorithm>
 #include <iostream>
-#include <vector>
+#include <queue>
 using namespace std;
 
 void body() {
@@ -10,22 +10,23 @@ void body() {
   cin >> N;
 
   //  process
-  // make a deck by vector;
-  vector<int> deck(N);
+  // make a deck by STL queue;
+  queue<int> deck;
   for (int i = 0; i < N; i++) {
-    deck[i] = i + 1;
+    deck.push(i + 1);
   }
 
   while (N-- > 1) {
-    // remove the first card
-    deck.erase(deck.begin());
-    // move the first card to last
-    deck.push_back(*deck.begin());
-    deck.erase(deck.begin());
+    // remove first card
+    deck.pop();
+
+    // add first card to the end of the deck
+    deck.push(deck.front());
+    deck.pop();
   }
 
   // output
-  cout << deck[0];
+  cout << deck.back();
 }
 
 int main() {
