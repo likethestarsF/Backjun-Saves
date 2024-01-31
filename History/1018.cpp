@@ -1,4 +1,5 @@
-// 240130 1 #1018
+// 240131 1 #1018
+// 240130
 #include <iostream>
 #include <string>
 using namespace std;
@@ -23,7 +24,7 @@ void body() {
   int n, m;
   cin >> n >> m;
 
-  string *str = new string[m];
+  string *str = new string[n];
   for (auto i = 0; i < n; i++) {
     cin >> str[i];
     clog << "input " << i << str[i] << '\n';
