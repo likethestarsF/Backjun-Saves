@@ -7,14 +7,21 @@ using namespace std;
 
 class queue {
   vector<int> body;
+
+  // for iterartor pointing the front
   int i = 0;
   vector<int>::iterator fr;
+
+  // See if the vector is empty. vector.size can not be used
+  // becasuse we are not erase the elements when pop.
   bool is_empty() { return (fr == body.end()); }
 
 public:
   queue() { fr = body.begin(); }
   void push(int n) {
     body.push_back(n);
+
+    // redefine itr as the elems changed.
     fr = body.begin() + i;
   }
 
@@ -24,6 +31,9 @@ public:
     } else {
       int temp;
       temp = *(body.begin() + i);
+
+      // move itr by exteral intger value not by itr++
+      //'cause we have to redefine itr when we manipulate the vector elems.
       i++;
       fr = body.begin() + i;
       return temp;
