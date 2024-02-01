@@ -65,7 +65,7 @@ struct Data {
 3. `[=, &x, &y] () {}`
 4. `[x, &y, &z] () {}`
 
-`mutable ->type_name` : can be modify captured value.
+`mutable ->type_name` : can be modify captured value.  
 
 <details>
   
