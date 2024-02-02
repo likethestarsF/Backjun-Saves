@@ -17,30 +17,34 @@ class Josephus {
 
   // find who is the k-th person in circle.
   int findKth(int k) {
-    int size = circle.size();
+    const int size = circle.size();
     clog << "size: " << size << endl;
 
-    size = k % size;
-    clog << "k % size: " << size << endl;
+    int resultIndex = k % size;
+    resultIndex--;         // vector starts at 0.
+    if (resultIndex == -1) // avoid -1
+      resultIndex = size - 1;
 
-    return (size - 1) % size; // avoid -1 by `% size.`
+    clog << "resultIndex: " << resultIndex << endl;
+    return resultIndex;
   }
 
 public:
   // initialize the 1 ~ n circular permutation.
   Josephus(int n) {
     for (int i = 0; i < n; i++) {
-      circle.push_back(n);
+      circle.push_back(i + 1);
     }
+
+    for (const auto &i : circle)
+      clog << i << " ";
   }
 
   // add k-th man to output list, and remove k-th man from the circle.
   void pop(int k) {
-    output.push_back(circle[findKth(k)]);
-    circle.erase(circle.begin() + findKth(k));
-
-    for (const auto &i : output)
-      clog << "output: " << i << endl;
+    int index = findKth(k);
+    output.push_back(circle[index]);
+    circle.erase(circle.begin() + index);
   }
 
   // print out the output list.
