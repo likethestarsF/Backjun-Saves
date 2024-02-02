@@ -14,15 +14,16 @@ using namespace std;
 class Josephus {
   vector<int> circle; // initial circular list.
   vector<int> output; // output list.
+  int lastIndex = 0;  // index of lastly erased person.
 
   // find who is the k-th person in circle.
   int findKth(int k) {
     const int size = circle.size();
     clog << "size: " << size << endl;
 
-    int resultIndex = k % size;
-    resultIndex--;         // vector starts at 0.
-    if (resultIndex == -1) // avoid -1
+    int resultIndex = (lastIndex + k) % size;
+    resultIndex--;         // vector starts at 0. move the index by -1.
+    if (resultIndex == -1) // avoid -1 index.
       resultIndex = size - 1;
 
     clog << "resultIndex: " << resultIndex << endl;
@@ -45,6 +46,8 @@ public:
     int index = findKth(k);
     output.push_back(circle[index]);
     circle.erase(circle.begin() + index);
+
+    lastIndex = index;
   }
 
   // print out the output list.
@@ -81,7 +84,7 @@ int main() {
   cout.tie(NULL);
 
   /* clog switch */
-  // std::clog.setstate(std::ios_base::failbit);
+  std::clog.setstate(std::ios_base::failbit);
 
   body();
 }
