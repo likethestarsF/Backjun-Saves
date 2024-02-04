@@ -8,7 +8,7 @@
 ** 37 ~ 60 : 6 * (1 + 2 + 3 + 4) : 5
 ** ...
 ** XX ~ XX : 6 * ( N*(N + 1)/2 ) : (N + 1)
-** x is minimum of room number.
+** N+1 is minimum of room number.
 */
 #include <algorithm>
 #include <iostream>
