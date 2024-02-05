@@ -11,21 +11,15 @@ void body() {
   cin >> a >> b >> v;
 
   //  process
-  int snailPosition = 0;
-  int day = 0;
-  for (int i = 1;; i++) {
-    // climb a meter at day.
-    snailPosition += a;
-    // fall b meter at night.
-    if (snailPosition >= v) {
-      day = i;
-      break;
-    }
-    snailPosition -= b;
-  }
+  int dayInt = (v - a) / (a - b);
+  dayInt++;
+
+  dayInt++;
+  if ((v - a) % (a - b) == 0)
+    dayInt--;
 
   // output
-  cout << day;
+  cout << dayInt;
 }
 
 int main() {
