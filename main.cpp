@@ -1,37 +1,33 @@
 // 240209 3 #10989
 /* Using STL sort is the easiest way.
 ** However, because of the memory restriction we cannot apply STL sort.
-** we should input the data and do sorting simultaneously.
-** Linear Search causes Timeout.
-** Binary Search will be helpful.
+** Use Bubble Sort for It uses less memory.
 */
+
 #include <algorithm>
 #include <iostream>
 #include <vector>
 using namespace std;
 
 void body() {
-  vector<int> list;
-
   // input
   int n;
   cin >> n;
+
+  vector<short> list(n);
   for (int i = 0; i < n; i++) {
-    int inputInt;
-    cin >> inputInt;
-
-    // sorting process.
-    auto itr = lower_bound(list.begin(), list.end(), inputInt);
-
-    if (itr == list.end())
-      list.push_back(inputInt);
-    else
-      list.insert(itr, inputInt);
+    cin >> list[i];
   }
 
+  // sorting process by Bubble Sort.
+  for (int i = 0; i < n - 1; i++)
+    for (int j = 0; j < n - 1 - i; j++)
+      if (list[j] > list[j + 1])
+        swap(list[j], list[j + 1]);
+
   // output
-  for (const auto &elem : list) {
-    cout << elem << '\n';
+  for (int i = 0; i < n; i++) {
+    cout << list[i] << '\n';
   }
 }
 
