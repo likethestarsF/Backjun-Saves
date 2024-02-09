@@ -1,4 +1,5 @@
 // 240205 4 #1654
+// 240209 1 #1654
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -36,19 +37,19 @@ void body() {
   // and repeat this process until result and n are same.
   long rLength = maxOfLine;
   long lLength = 1;
-  long midLength = (rLength - lLength) / 2;
+  long midLength = (rLength + lLength) / 2;
   while (true) {
     unsigned long long nSearch = findN(line, midLength);
 
     // increase length and update length.
     if (nSearch > n) {
       lLength = midLength;
-      midLength = (rLength - lLength) / 2;
+      midLength = (rLength + lLength) / 2;
     }
     // decrease length and update length.
     else if (nSearch < n) {
-      lLength = midLength;
-      midLength = (rLength - lLength) / 2;
+      rLength = midLength;
+      midLength = (rLength + lLength) / 2;
     }
     // n == result(midLength).
     else {
