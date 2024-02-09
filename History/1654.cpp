@@ -40,7 +40,7 @@ void body() {
 
     // increase length and update length.
     if (nSearch >= n) {
-      lLength = midLength + 1;
+      lLength = midLength + 1; 
       midLength = (rLength + lLength) / 2;
     }
     // decrease length and update length.
