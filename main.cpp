@@ -2,6 +2,8 @@
 /* Using STL sort is the easiest way.
 ** However, because of the memory restriction we cannot apply STL sort.
 ** we should input the data and do sorting simultaneously.
+** Linear Search causes Timeout.
+** Binary Search will be helpful.
 */
 #include <algorithm>
 #include <iostream>
@@ -19,17 +21,12 @@ void body() {
     cin >> inputInt;
 
     // sorting process.
-    bool flag = true;
-    for (int i = 0; i < list.size(); i++) {
-      if (inputInt <= list[i]) {
-        list.insert(list.begin() + i, inputInt);
-        flag = false;
-        break;
-      }
-    }
+    auto itr = lower_bound(list.begin(), list.end(), inputInt);
 
-    if (flag)
+    if (itr == list.end())
       list.push_back(inputInt);
+    else
+      list.insert(itr, inputInt);
   }
 
   // output
