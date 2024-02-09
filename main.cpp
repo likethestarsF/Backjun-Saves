@@ -14,10 +14,10 @@ unsigned long long findN(const vector<int> &line, int length) {
 }
 void body() {
   // input
-  unsigned int k, n;
+  long k, n;
   cin >> k >> n;
 
-  int maxOfLine = 0;
+  long maxOfLine = 0;
   vector<int> line(k);
   for (int i = 0; i < k; i++) {
     cin >> line[i];
@@ -58,15 +58,32 @@ void body() {
   }
 
   // we have to find biggest length.
-  // when result and n are same,
-  // we increase length by 1 until n and result is different.
-  // if we decrease by 1 to result, that is the answer.
+  // Use binary search again. Untill we reach the maximum.
+  // initial upper bound is rLength.
+  // update upper bound when nSearch is bigger than upperbound.
+  lLength = midLength;
+  midLength = (rLength + lLength) / 2;
   while (true) {
-    midLength++;
-    if (n != findN(line, midLength))
+    unsigned long long nSearch = findN(line, midLength);
+
+    // Update upper bound.
+    if (nSearch != n) {
+      rLength = midLength;
+      midLength = (rLength + lLength) / 2;
+    }
+    // Not the max value.
+    else if (rLength - lLength > 1) {
+      lLength = midLength;
+      midLength = (rLength + lLength) / 2;
+    }
+    // End of loop. [x, x+1]
+    else {
+      // For[x, x+1], check if x+1 can be answer. if the n is 1, x+1 is answer.
+      if (findN(line, rLength) == n)
+        midLength = rLength;
       break;
+    }
   }
-  midLength--;
 
   // output
   cout << midLength;
