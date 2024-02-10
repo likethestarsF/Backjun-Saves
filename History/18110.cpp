@@ -18,25 +18,27 @@ void body() {
     cin >> input;
     rating.push_back(input);
   }
+  int answer = 0;
+  if (n != 0) {
+    //  process
+    sort(rating.begin(), rating.end());
 
-  //  process
-  sort(rating.begin(), rating.end());
+    int deleted = round(n * 0.15);
+    clog << "\ndeleted number : " << deleted << endl;
 
-  int deleted = round(n * 0.15);
-  clog << "\ndeleted number : " << deleted << endl;
+    float sum = 0;
+    for (int i = deleted; i < n - deleted; i++) {
+      sum += rating[i];
+      clog << "\n rating[i] is : " << rating[i] << endl;
+      clog << " sum is : " << sum << endl;
+    }
 
-  float sum = 0;
-  for (int i = deleted; i < n - deleted; i++) {
-    sum += rating[i];
-    clog << "\n rating[i] is : " << rating[i] << endl;
-    clog << " sum is : " << sum << endl;
+    float divider = n - (deleted * 2);
+    clog << "divider " << divider << endl;
+
+    sum /= divider;
+    answer = round(sum);
   }
-
-  float divider = n - (deleted * 2);
-  clog << "divider " << divider << endl;
-
-  sum /= divider;
-  int answer = round(sum);
 
   // output
   cout << answer;
