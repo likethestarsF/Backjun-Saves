@@ -4,6 +4,7 @@
 ** else if the number is a multiple of: divide by 3. - end of loop
 ** else minus 5 and go through again above loop.
 ** when the number is less than 0 : that is the impossible case.
+** if the number is bigger than 3*5 + alpha, we should avoid dividing by 3.
 */
 #include <algorithm>
 #include <iostream>
@@ -22,7 +23,7 @@ void body() {
     if (n % 5 == 0) {
       cnt += n / 5;
       break;
-    } else if (n % 3 == 0) {
+    } else if (n % 3 == 0 && n < 15) {
       cnt += n / 3;
       break;
     } else {
