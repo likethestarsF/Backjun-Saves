@@ -49,11 +49,12 @@ public:
   ** DEF. needToPlace: X, totalBlock of a floor: N = width * length
   ** COND to place:
   ** 1. X <= B
-  ** 2. X < 2*(N-X) : 3X < 2N
+  ** 2. !(X > 2*(N-X)) <-> 3X <= 2N
   */
   void placeBlockCheck() {
     blockNeeded = 0;
     // loop for count blocks
+    minLevel = ground.front();
     for (const auto &elem : ground) {
       if (elem == minLevel) {
         blockNeeded++;
@@ -62,14 +63,23 @@ public:
     }
 
     // check if placing can be done.
+    minLevel = ground.front();
+    maxLevel = ground.back();
+
     if (/* COND 1 */ blockNeeded <= block &&
-        /* COND 2 */ 3 * blockNeeded < 2 * plane)
+        /* COND 2 */ 3 * blockNeeded <= 2 * plane &&
+        /* COND 3 */ minLevel != 256) {
       placeBlock();
-    else
+
+    } else if (maxLevel != 0)
       breakBlock();
+
+    else
+      placeBlock();
   }
 
   void placeBlock() {
+    minLevel = ground.front();
     for (auto &elem : ground) {
       if (elem == minLevel) {
         elem++;
@@ -83,11 +93,12 @@ public:
 
   // breaking blocks at max level.
   void breakBlock() {
+    maxLevel = ground.back();
     for (int i = ground.size() - 1;; i--) {
       if (ground[i] == maxLevel) {
         ground[i]--;
         cntBreaked++;
-        block--;
+        block++;
       } else
         break;
     }
