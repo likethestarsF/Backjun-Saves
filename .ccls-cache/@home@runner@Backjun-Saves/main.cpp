@@ -22,7 +22,7 @@ class origami {
 
 public:
   vector<vector<bool>> initPaper;
-  void input(const bool &n) {
+  void input(const int &n) {
     initPaper = vector<vector<bool>>(n, vector<bool>(n)); // initPaper[i][j]
 
     for (int i = 0; i < n; i++) {
@@ -51,19 +51,25 @@ public:
       vector<vector<bool>> quarter(length / 2, vector<bool>(length / 2));
 
       // DEF init point of paper
-      int iDelta = 0;
-      int jDelta = 0;
+      int iDelta;
+      int jDelta;
       switch (init) {
       case 1:
+        iDelta = 0;
         jDelta = length / 2;
         break;
+      case 2:
+        iDelta = 0;
+        jDelta = 0;
       case 3:
         iDelta = length / 2;
+        jDelta = 0;
         break;
       case 4:
         iDelta = length / 2;
         jDelta = length / 2;
       default:
+        cerr << "error" << endl;
         break;
       }
 
@@ -92,6 +98,15 @@ public:
   }
 
   void output() { cout << whiteCnt << '\n' << blueCnt << '\n'; }
+
+  void test_input() {
+    cout << endl << endl;
+    for (const auto &elem : initPaper) {
+      for (int i = 0; i < initPaper.size(); i++)
+        cout << elem[i] << ' ';
+      cout << endl;
+    }
+  }
 };
 
 int main() {
@@ -108,6 +123,7 @@ int main() {
   cin >> n;
 
   a.input(n);
-  a.DivideAndConquer(a.initPaper, n);
-  a.output();
+  a.test_input();
+  // a.DivideAndConquer(a.initPaper, n);
+  // a.output();
 }
