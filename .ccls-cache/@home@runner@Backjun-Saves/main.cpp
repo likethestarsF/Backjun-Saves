@@ -61,6 +61,7 @@ public:
       case 2:
         iDelta = 0;
         jDelta = 0;
+        break;
       case 3:
         iDelta = length / 2;
         jDelta = 0;
@@ -68,6 +69,7 @@ public:
       case 4:
         iDelta = length / 2;
         jDelta = length / 2;
+        break;
       default:
         cerr << "error" << endl;
         break;
@@ -87,7 +89,6 @@ public:
           blueCnt++;
         else
           whiteCnt++;
-        return; // exit :DivideAndConquer
       }
 
       // else recall and divide to quarter
@@ -123,7 +124,7 @@ int main() {
   cin >> n;
 
   a.input(n);
-  a.test_input();
-  // a.DivideAndConquer(a.initPaper, n);
-  // a.output();
+  // a.test_input();
+  a.DivideAndConquer(a.initPaper, n);
+  a.output();
 }
