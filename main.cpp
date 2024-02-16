@@ -11,8 +11,8 @@ class origami {
 
   template <typename T> int colorCheck(const T &paper) {
     const int color = paper[0][0];
-    for (const auto elem : paper) {
-      for (const auto elem2 : elem)
+    for (const auto &elem : paper) {
+      for (const auto &elem2 : elem)
         if (color != elem2) {
           return -1;
         }
@@ -43,57 +43,57 @@ public:
         blueCnt++;
       else
         whiteCnt++;
-      return; // exit because length is 1
-    }
+    } else {
 
-    // DIVIDE into 4 papers: make the quarter paper
-    for (int init = 1; init <= 4; init++) {
-      vector<vector<bool>> quarter(length / 2, vector<bool>(length / 2));
+      // DIVIDE into 4 papers: make the quarter paper
+      for (int init = 1; init <= 4; init++) {
+        vector<vector<bool>> quarter(length / 2, vector<bool>(length / 2));
 
-      // DEF init point of paper
-      int iDelta;
-      int jDelta;
-      switch (init) {
-      case 1:
-        iDelta = 0;
-        jDelta = length / 2;
-        break;
-      case 2:
-        iDelta = 0;
-        jDelta = 0;
-        break;
-      case 3:
-        iDelta = length / 2;
-        jDelta = 0;
-        break;
-      case 4:
-        iDelta = length / 2;
-        jDelta = length / 2;
-        break;
-      default:
-        cerr << "error" << endl;
-        break;
-      }
+        // DEF init point of paper
+        int iDelta;
+        int jDelta;
+        switch (init) {
+        case 1:
+          iDelta = 0;
+          jDelta = length / 2;
+          break;
+        case 2:
+          iDelta = 0;
+          jDelta = 0;
+          break;
+        case 3:
+          iDelta = length / 2;
+          jDelta = 0;
+          break;
+        case 4:
+          iDelta = length / 2;
+          jDelta = length / 2;
+          break;
+        default:
+          cerr << "error" << endl;
+          break;
+        }
 
-      // copy paper to the quarter
-      for (int i = 0; i < length / 2; i++) {
-        for (int j = 0; j < length / 2; j++)
-          quarter[i][j] = paper[i + iDelta][j + jDelta];
-      }
+        // copy paper to the quarter
+        for (int i = 0; i < length / 2; i++) {
+          for (int j = 0; j < length / 2; j++)
+            quarter[i][j] = paper[i + iDelta][j + jDelta];
+        }
 
-      // Check if quarter is homogeoneous: -1:non-homo, 0:W, 1:B
-      int color = colorCheck(quarter);
-      // exit 2nd : quarter is homogeoneous.
-      if (color != -1) {
-        if (color == 1)
-          blueCnt++;
-        else
-          whiteCnt++;
-      }
+        // Check if quarter is homogeoneous: -1:non-homo, 0:W, 1:B
+        int color = colorCheck(quarter);
+        // exit 2nd : quarter is homogeoneous.
+        if (color != -1) {
+          if (color == 1)
+            blueCnt++;
+          else
+            whiteCnt++;
+        }
 
-      // else recall and divide to quarter
-      else {
-        DivideAndConquer(quarter, length / 2);
+        // else recall and divide to quarter
+        else {
+          DivideAndConquer(quarter, length / 2);
+        }
       }
     }
   }
