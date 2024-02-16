@@ -9,15 +9,15 @@ class origami {
   int whiteCnt = 0;
   int blueCnt = 0;
 
-  template <typename T> int colorCheck(const T &paper) {
-    const int color = paper[0][0];
+  template <typename T> bool colorCheck(const T &paper) {
+    const bool color = paper[0][0];
     for (const auto &elem : paper) {
       for (const auto &elem2 : elem)
         if (color != elem2) {
-          return -1;
+          return 1;
         }
     }
-    return color;
+    return 0; // false when homogeneous
   }
 
 public:
@@ -36,78 +36,68 @@ public:
 
   template <typename T>
   // only 2 Exits. 4 returns are made by 1 step.
-  void DivideAndConquer(const T &paper, int length) {
+  void DivideAndConquer(const T &paper, const int length) {
     // exit 1st : length is 1.
     if (length == 1) {
       if (paper[0][0] == 1)
         blueCnt++;
       else
         whiteCnt++;
-    } else {
+    } else if (!colorCheck(paper)) {
+      if (paper[0][0] == 1)
+        blueCnt++;
+      else
+        whiteCnt++;
+    }
 
+    else {
       // DIVIDE into 4 papers: make the quarter paper
-      for (int init = 1; init <= 4; init++) {
-        vector<vector<bool>> quarter(length / 2, vector<bool>(length / 2));
+      for (int quarterIndex = 0; quarterIndex < 4; quarterIndex++) {
+        vector<vector<bool>> quarter((length / 2), vector<bool>(length / 2));
 
-        // DEF init point of paper
+        // DEF quarterIndex of paper
         int iDelta;
         int jDelta;
-        switch (init) {
-        case 1:
-          iDelta = 0;
-          jDelta = length / 2;
-          break;
-        case 2:
+        if (quarterIndex == 0) {
           iDelta = 0;
           jDelta = 0;
-          break;
-        case 3:
+        } else if (quarterIndex == 1) {
           iDelta = length / 2;
           jDelta = 0;
-          break;
-        case 4:
+        } else if (quarterIndex == 2) {
+          iDelta = 0;
+          jDelta = length / 2;
+        } else if (quarterIndex == 3) {
           iDelta = length / 2;
           jDelta = length / 2;
-          break;
-        default:
+        } else {
           cerr << "error" << endl;
-          break;
         }
 
         // copy paper to the quarter
-        for (int i = 0; i < length / 2; i++) {
-          for (int j = 0; j < length / 2; j++)
+        for (int i = 0; i < (length / 2); i++) {
+          for (int j = 0; j < (length / 2); j++)
             quarter[i][j] = paper[i + iDelta][j + jDelta];
         }
 
-        // Check if quarter is homogeoneous: -1:non-homo, 0:W, 1:B
-        int color = colorCheck(quarter);
+        // Check if quarter is homogeoneous :false
+        // recall and divide to quarter
+        if (colorCheck(quarter)) {
+          DivideAndConquer(quarter, length / 2);
+        }
+
         // exit 2nd : quarter is homogeoneous.
-        if (color != -1) {
-          if (color == 1)
+        else {
+          if (quarter[0][0] == 1)
             blueCnt++;
           else
             whiteCnt++;
-        }
-
-        // else recall and divide to quarter
-        else {
-          DivideAndConquer(quarter, length / 2);
         }
       }
     }
   }
 
-  void output() { cout << whiteCnt << '\n' << blueCnt << '\n'; }
-
-  void test_input() {
-    cout << endl << endl;
-    for (const auto &elem : initPaper) {
-      for (int i = 0; i < initPaper.size(); i++)
-        cout << elem[i] << ' ';
-      cout << endl;
-    }
-  }
+  void output() { cout << whiteCnt << '\n' << blueCnt; }
 };
 
 int main() {
@@ -124,7 +114,6 @@ int main() {
   cin >> n;
 
   a.input(n);
-  // a.test_input();
   a.DivideAndConquer(a.initPaper, n);
   a.output();
 }
