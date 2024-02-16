@@ -1,39 +1,84 @@
 // 240214 6 #1927
+// 240216 1 #1927
 #include <algorithm>
 #include <iostream>
-#include <string>
 #include <vector>
+#define HEAP_MAX 100000
 using namespace std;
 
-int heap(vector<int> &v) {
-  if (v.empty()) {
-    return 0;
-  } else {
-    sort(v.begin(), v.end(), greater<int>());
-    int temp = v.back();
-    v.pop_back();
-    return temp;
+class heap {
+  int v[HEAP_MAX + 1];
+  int heap_count = 0;
+
+  void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
   }
-}
 
-void body() {
-  // input
-  int n;
-  cin >> n;
+public:
+  void input() {
+    int n;
+    cin >> n;
 
-  vector<int> v = {};
-  while (n--) {
-    unsigned int inp;
-    cin >> inp;
-    if (inp == 0)
-      cout << heap(v) << '\n';
-    else {
-      v.push_back(inp);
+    while (n--) {
+      unsigned int inp;
+      cin >> inp;
+
+      if (inp == 0) {
+        pop();
+      }
+
+      else {
+        push(inp);
+      }
     }
   }
 
-  // output
-}
+  void pop() {
+    if (heap_count == 0) {
+      cout << 0 << '\n';
+      return;
+    }
+
+    // print
+    cout << v[1] << '\n';
+
+    // erase
+    swap(&v[1], &v[heap_count]);
+    heap_count--;
+
+    // rebuild the heap
+    int parent = 1;
+    int child = parent * 2;
+    if (child + 1 <= heap_count) {
+      child = (v[child] < v[child + 1]) ? child : child + 1;
+    }
+
+    while (child <= heap_count && v[parent] > v[child]) {
+      swap(&v[child], &v[parent]);
+
+      parent = child;
+      child = parent * 2;
+      if (child + 1 <= heap_count) {
+        child = (v[child] < v[child + 1]) ? child : child + 1;
+      }
+    }
+  }
+
+  void push(const int &inp) {
+    v[++heap_count] = inp;
+
+    int child = heap_count;
+    int parent = child / 2;
+
+    while (child > 1 && v[child] < v[parent]) {
+      swap(&v[child], &v[parent]);
+      child = parent;
+      parent = child / 2;
+    }
+  }
+};
 
 int main() {
   /* cin optimize */
@@ -44,5 +89,6 @@ int main() {
   /* clog switch */
   // std::clog.setstate(std::ios_base::failbit);
 
-  body();
+  heap a;
+  a.input();
 }
