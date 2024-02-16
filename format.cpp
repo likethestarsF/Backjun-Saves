@@ -5,13 +5,11 @@
 #include <vector>
 using namespace std;
 
-void body() {
-  // input
+class my {
 
-  //  process
+public:
 
-  // output
-}
+};
 
 int main() {
   /* cin optimize */
@@ -22,5 +20,5 @@ int main() {
   /* clog switch */
   // std::clog.setstate(std::ios_base::failbit);
 
-  body();
+  my a;
 }
