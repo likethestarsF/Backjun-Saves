@@ -5,88 +5,205 @@
 #include <vector>
 using namespace std;
 
-struct ott {
-  int k[4] = {0, 0, 0, 0};
+struct tri {
+  int d[4] = {0, 0, 0, 0};
+
+  bool operator<(const tri &other) const {
+    for (int i = 1; i < 4; i++) {
+      if (d[i] != other.d[i]) {
+        return d[i] < other.d[i];
+      }
+    }
+    return false;
+  }
 };
 
 class my {
+  vector<int> dptable;
+
+  // need to use dp
+  int fact(const int &n) {
+    if (dptable[n] == 0)
+      dptable[n] = n * fact(n - 1);
+    return dptable[n];
+  }
 
 public:
   vector<int> cnt;
-  void input(int t) {
+  my() {
+    dptable = vector<int>(12, 0);
+    dptable[0] = 1;
+    dptable[1] = 1;
+  }
+
+  void IO(int t) {
     while (t--) {
       int n;
       cin >> n;
 
-      body(n);
+      cout << body(n) << '\n'; // returns the answer
     }
   }
 
-  // reset index when it reaches the end of the vector
-  bool resetIndexNeeded(const vector<int> &N, int &index) {
-    if (index == N.size())
-      return true;
-    else
-      return false;
-  }
+  void spreading1(int &n, set<tri> &table) {
+    for (int numOfN = 1; numOfN <= n; numOfN++) {
+      // initialize vector which size is numOfN
+      vector<int> digits = vector<int>(numOfN, 0);
+      // 2 wrong cases: Exist over 3 or 0. - check by flag
+      bool flag_numOfN = true;
 
-  void body(const int &n) {
-    int sum = 1;
-    if (n == 1) {
-    } else {
-      // make the possible cases - DPtable
-      set<ott> cases;
-
-      //  sum of min
-      vector<int> minN(n, 1);
-      int minIndex = 0;
-      ott minCnt;
-      while (minN.back() != 1) { // 'til back is not 1
-
-        minN.pop_back(); // remove 1
-        while (true) {
-          if (minN[minIndex] != 3) {
-            minN[minIndex]++;
-            minIndex++;
+      int timesCnt = 0;
+      while (timesCnt < n) { // add n times
+        for (int i = 0; i < numOfN; i++) {
+          if (timesCnt == n)
             break;
-          }
-          minIndex++;
-          if (resetIndexNeeded(minN, minIndex)) {
-            // this is the terminal case.
-            minN.push_back(1);
-            break;
-          }
+          digits[i]++;
+          timesCnt++;
         }
 
-        // reset index when it reaches the end of the vector
-        if (resetIndexNeeded(minN, minIndex))
-          minIndex = 0;
+        if (digits[0] > 3) { // wrong case 1
+          flag_numOfN = false;
+          break;
+        }
+      }
+      if (digits.back() == 0) // wrong case 2
+        flag_numOfN = false;
 
-        // save the case
-        for (int i = 0; i < minN.size(); i++) {
-          minCnt.k[minN[i]]++;
+      // add the case to the table :excluding the wrong cases
+      if (flag_numOfN) {
+        // count the number of 1,2,3
+        tri temp;
+        for (const auto &elem : digits)
+          temp.d[elem]++;
+
+        table.insert(temp); // submit
+      }
+    }
+  }
+
+  void concetrated1(int &n, set<tri> &table) {
+    for (int numOfN = 1; numOfN <= n; numOfN++) {
+      // initialize vector which size is numOfN
+      vector<int> digits = vector<int>(numOfN, 0);
+      // 2 wrong cases: Exist over 3 or 0. - check by flag
+      bool flag_numOfN = true;
+
+      // spreading 1st to 1 for every elem
+      int timesCnt = 0;
+      for (int i = 0; i < numOfN; i++) {
+        digits[i]++;
+        timesCnt++;
+      }
+
+      if (timesCnt > n)
+        flag_numOfN = false; // wrong case: 1st spreading cannot be done.
+
+      while (timesCnt < n) { // add n times
+        for (int i = 0; i < digits.size();) {
+          if (timesCnt == n)
+            break;
+
+          digits[i]++;
+          timesCnt++;
+
+          if (digits[i] == 3)
+            i++;
+          if (i == digits.size()) {
+            goto Exit;
+          }
+        }
+      }
+    Exit: // wrong case if adding is not completely done.
+      if (timesCnt < n) {
+        flag_numOfN = false;
+      }
+
+      // add the case to the table :excluding the wrong cases
+      if (flag_numOfN) {
+        // count the number of 1,2,3
+        tri temp;
+        for (const auto &elem : digits)
+          temp.d[elem]++;
+
+        table.insert(temp); // submit
+      }
+    }
+  }
+
+  void fixed3(int &n, set<tri> &table) {
+    for (int numOfN = 1; numOfN <= n; numOfN++) {
+      // initialize vector which size is numOfN
+      vector<int> digits = vector<int>(numOfN, 0);
+      // 2 wrong cases: Exist over 3 or 0. - check by flag
+      bool flag_numOfN = true;
+
+      int num3 = n / 3;
+      int flag3 = false;
+      if (num3 < numOfN) {
+        flag3 = true;
+        for (int i = 0; i < num3; i++)
+          digits[i] = 3;
+      }
+
+      int timesCnt = num3 * 3;
+      int k = 0;
+      if (flag3) {
+        k = num3 - 1;
+      }
+      while (timesCnt < n) { // add n times
+        for (int i = k; i < numOfN; i++) {
+          if (timesCnt == n)
+            break;
+          digits[i]++;
+          timesCnt++;
         }
 
-        // sort(minN.begin(), minN.end(), greater<int>()); // min goes back
+        if (digits[k] > 3) { // wrong case 1
+          flag_numOfN = false;
+          break;
+        }
       }
+      if (digits.back() == 0) // wrong case 2
+        flag_numOfN = false;
 
-      // sum of max
-      vector<int> maxN(n, 1);
-      int maxIndex = 0;
-      while (maxN.back() != 1) { // 'til back is not 1
+      // add the case to the table :excluding the wrong cases
+      if (flag_numOfN) {
+        // count the number of 1,2,3
+        tri temp;
+        for (const auto &elem : digits)
+          temp.d[elem]++;
 
-        sort(maxN.begin(), maxN.end(), greater<int>()); // min goes back
+        table.insert(temp); // submit
       }
     }
-    // end of count
-    cnt.push_back(sum);
   }
 
-  void output() {
-    for (const auto &elem : cnt) {
-      cout << elem << '\n';
+  int body(int n) {
+    set<tri> table;
+
+    // making the table
+    // case 1: spread the 1
+    spreading1(n, table);
+    // case 2 : concentrated adding
+    // concetrated1(n, table);
+    fixed3(n, table);
+
+    // finish to store the every possible cases in table.
+    // count possible cases using mathmathecal method
+    int totCnt = 0;
+    // clog << "\nfor reached: " << table.size() << endl;
+    for (auto it = table.begin(); it != table.end(); it++) {
+      int totalDigits = it->d[1] + it->d[2] + it->d[3];
+      int partCnt = fact(totalDigits) /
+                    (fact(it->d[1]) * fact(it->d[2]) * fact(it->d[3]));
+      totCnt += partCnt;
+      clog << "partCnt :" << partCnt << '\n';
     }
+
+    return totCnt;
   }
+
+  void o() { cout << fact(11); }
 };
 
 int main() {
@@ -101,5 +218,5 @@ int main() {
   my a;
   int t;
   cin >> t;
-  a.input(t);
+  a.IO(t);
 }
