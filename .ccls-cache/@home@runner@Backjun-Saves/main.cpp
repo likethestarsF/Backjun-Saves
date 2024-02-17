@@ -1,69 +1,39 @@
-// 240216 4 #9095
+// 240217 1 #11659
 #include <algorithm>
 #include <iostream>
+#include <string>
 #include <vector>
 using namespace std;
 
-struct tri {
-  int d[3];
-};
-
 class my {
-  vector<int> dptable;
-
-  // factorial using the dp table
-  int fact(const int &n) {
-    if (dptable[n] == 0)
-      dptable[n] = n * fact(n - 1);
-    return dptable[n];
-  }
-
-  template <typename T> int countCases(const T &cases) {
-    int cnt = 0;
-    for (const auto &elem : cases) {
-      int k = elem.d[0] + elem.d[1] + elem.d[2];
-      int cntPartial =
-          fact(k) / (fact(elem.d[0]) * fact(elem.d[1]) * fact(elem.d[2]));
-      cnt += cntPartial;
-    }
-    return cnt;
-  }
+  vector<long> prefixSum;
 
 public:
-  vector<int> cnt;
-  my() {
-    dptable = vector<int>(12, 0);
-    dptable[0] = 1;
-    dptable[1] = 1;
+  void input2nd(int &typesOfN) {
+    long prevPush = 0;
+    for (int i = 0; i < typesOfN; i++) { // second Line input
+      long forPush;
+      cin >> forPush;
+      forPush += prevPush;
+      prefixSum.push_back(forPush);
+      prevPush = forPush; // udapte prev input
+    }
   }
+  void inputRange(int &sumTimes) {
+    for (int i = 0; i < sumTimes; i++) {
+      int start, end;
+      cin >> start >> end;
 
-  void IO(int &t) {
-    while (t--) {
-      int n;
-      cin >> n;
-
-      cout << body(n) << '\n'; // returns the answer
+      cout << calcSum(start - 1, end - 1) << '\n'; // output
     }
   }
 
-  int body(const int &n) {
-    // var 1 : number of 3
-    int num3 = n / 3;
-    // var 2 : number of 2
-    int num2 = n / 2;
-
-    vector<tri> cases;
-    for (int i = 0; i <= num3; i++)
-      for (int j = 0; j <= num2; j++) {
-        int remain = n - i * 3 - j * 2; // equal to num1
-        // wrong case: jump
-        if (remain >= 0) {
-          tri forPush = {i, j, remain};
-          cases.push_back(forPush);
-        }
-      }
-
-    return countCases(cases);
+  long calcSum(const int &start, const int &end) {
+    if (start == 0)
+      return prefixSum[end];
+    else {
+      return (prefixSum[end] - prefixSum[start - 1]);
+    }
   }
 };
 
@@ -77,7 +47,9 @@ int main() {
   // std::clog.setstate(std::ios_base::failbit);
 
   my a;
-  int t;
-  cin >> t;
-  a.IO(t);
+  int n, m;
+  cin >> n >> m;
+
+  a.input2nd(n);
+  a.inputRange(m);
 }
