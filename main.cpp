@@ -1,40 +1,27 @@
-// 240217 1 #11659
+// 240217 3 #11726
+// 240218 1 #11726
 #include <algorithm>
 #include <iostream>
-#include <string>
 #include <vector>
 using namespace std;
 
 class my {
-  vector<long> prefixSum;
+  int caseCnt = 0;
 
 public:
-  void input2nd(int &typesOfN) {
-    long prevPush = 0;
-    for (int i = 0; i < typesOfN; i++) { // second Line input
-      long forPush;
-      cin >> forPush;
-      forPush += prevPush;
-      prefixSum.push_back(forPush);
-      prevPush = forPush; // udapte prev input
+  void recursiveFill(const int &n) {
+    if (n == 0 || n == 1) {
+      caseCnt %= 10007;
+      caseCnt++;
     }
-  }
-  void inputRange(int &sumTimes) {
-    for (int i = 0; i < sumTimes; i++) {
-      int start, end;
-      cin >> start >> end;
 
-      cout << calcSum(start - 1, end - 1) << '\n'; // output
-    }
-  }
-
-  long calcSum(const int &start, const int &end) {
-    if (start == 0)
-      return prefixSum[end];
     else {
-      return (prefixSum[end] - prefixSum[start - 1]);
+      recursiveFill(n - 2); // use two 1x2 pieces
+      recursiveFill(n - 1); // use a 2x1 piece
     }
   }
+
+  void output() { cout << caseCnt % 10007; }
 };
 
 int main() {
@@ -47,9 +34,8 @@ int main() {
   // std::clog.setstate(std::ios_base::failbit);
 
   my a;
-  int n, m;
-  cin >> n >> m;
-
-  a.input2nd(n);
-  a.inputRange(m);
+  int n;
+  cin >> n;
+  a.recursiveFill(n);
+  a.output();
 }
