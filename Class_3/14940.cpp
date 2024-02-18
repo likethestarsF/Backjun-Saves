@@ -7,44 +7,48 @@ using namespace std;
 
 struct coord {
   int i, j;
-  int distance;
 };
 
 class my {
   int width, length;
-  vector<vector<int>> inputV, outputV;
+  vector<vector<bool>> visited;
+  vector<vector<int>> outputV;
 
   bool isValidCoordinate(const int &I, const int &J) {
     if (I < 0 || I >= length || J < 0 || J >= width) // boundary check goes 1st
       return false;
-    if (inputV[I][J] == 0)
-      return false;
-    if (outputV[I][J] != 0)
-      return false;
-    if (I == target.i && J == target.j)
+    if (visited[I][J] == true)
       return false;
 
     return true;
   }
 
   // check for 4 direction of starting point
-  void add4CasesToQueue(queue<coord> &planedToVisit, const int &I, const int &J,
-                        const int &distance) {
+  void add4CasesToQueueAndUpdate(queue<coord> &planedToVisit, const int &I,
+                                 const int &J, const int &prevDistance) {
     // up
     if (isValidCoordinate(I - 1, J)) {
-      planedToVisit.push({I - 1, J, distance});
+      planedToVisit.push({I - 1, J});
+      outputV[I - 1][J] = prevDistance + 1;
+      visited[I - 1][J] = true;
     }
     // down
     if (isValidCoordinate(I + 1, J)) {
-      planedToVisit.push({I + 1, J, distance});
+      planedToVisit.push({I + 1, J});
+      outputV[I + 1][J] = prevDistance + 1;
+      visited[I + 1][J] = true;
     }
     // left
     if (isValidCoordinate(I, J - 1)) {
-      planedToVisit.push({I, J - 1, distance});
+      planedToVisit.push({I, J - 1});
+      outputV[I][J - 1] = prevDistance + 1;
+      visited[I][J - 1] = true;
     }
     // right
     if (isValidCoordinate(I, J + 1)) {
-      planedToVisit.push({I, J + 1, distance});
+      planedToVisit.push({I, J + 1});
+      outputV[I][J + 1] = prevDistance + 1;
+      visited[I][J + 1] = true;
     }
   }
 
@@ -55,26 +59,28 @@ public:
     width = m;
     length = n;
 
-    // input vector
-    inputV = vector<vector<int>>(length, vector<int>(width));
-    outputV = vector<vector<int>>(length, vector<int>(width, 0));
+    // vector initialization
+    visited = vector<vector<bool>>(length, vector<bool>(width, false));
+    outputV = vector<vector<int>>(length, vector<int>(width, false));
   }
 
   void input() {
     for (int i = 0; i < length; i++) {
-      for (int j = 0; j < width; j++)
-        cin >> inputV[i][j];
-    }
-  }
-
-  void findTarget() {
-    for (int i = 0; i < length; i++) {
       for (int j = 0; j < width; j++) {
-        if (inputV[i][j] == 2) {
-          target.i = i;
-          target.j = j;
-          target.distance = 0;
+        int inp;
+        cin >> inp;
+
+        if (inp == 1)
+          inp = -1;
+        else if (inp == 0)
+          visited[i][j] = true;
+        else if (inp == 2) { // find a target
+          target = {i, j};
+          visited[i][j] = true;
+          inp = 0;
         }
+
+        outputV[i][j] = inp;
       }
     }
   }
@@ -88,17 +94,17 @@ public:
   ** change the position value to that of prev position + 1
   */
   void travelByBFS() {
-    queue<coord> planedToVisit = {};
     // initiate the queue
+    queue<coord> planedToVisit = {};
     planedToVisit.push(target);
 
+    // select -> (COND check) -> call a new one(coord)
     while (!planedToVisit.empty()) {
       coord current = planedToVisit.front();
       planedToVisit.pop();
-      outputV[current.i][current.j] = current.distance;
 
-      add4CasesToQueue(planedToVisit, current.i, current.j,
-                       current.distance + 1);
+      add4CasesToQueueAndUpdate(planedToVisit, current.i, current.j,
+                                outputV[current.i][current.j]);
     }
   }
 
@@ -122,11 +128,10 @@ int main() {
   // std::clog.setstate(std::ios_base::failbit);
 
   int m, n;
-  cin >> m >> n;
+  cin >> n >> m;
   my a;
   a.makeMap(m, n);
   a.input();
-  a.findTarget();
   a.travelByBFS();
   a.output();
 }
