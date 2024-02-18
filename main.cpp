@@ -35,19 +35,23 @@ public:
     stack<int> toVisit = {};
     vector<bool> visited(numVertex, false);
     toVisit.push(startPoint);
+    cout << startPoint + 1 << " ";
 
     while (!toVisit.empty()) {
       int current = toVisit.top();
-      toVisit.pop();
 
-      cout << current + 1 << ' ';
-
-      visited[current] = true;
-      for (int i = 0; i < numVertex; i++) {
-        if (!visited[i] && table[current][i]) {
+      bool flag = true;
+      for (int i = numVertex - 1; i >= 0; i--) {
+        if (!visited[i] && table[current][i] && i != startPoint) {
           toVisit.push(i);
+          visited[i] = true;
+          cout << i + 1 << ' ';
+          flag = false;
           break;
         }
+      }
+      if (flag) {
+        toVisit.pop();
       }
     }
     cout << '\n';
