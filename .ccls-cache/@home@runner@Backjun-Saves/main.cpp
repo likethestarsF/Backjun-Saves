@@ -15,11 +15,11 @@ class my {
   vector<vector<int>> inputV, outputV;
 
   bool isValidCoordinate(int I, int J) {
+    if (I < 0 || I >= length || J < 0 || J >= width) // boundary check goes 1st
+      return false;
     if (inputV[I][J] == 0)
       return false;
     if (outputV[I][J] != 0)
-      return false;
-    if (I < 0 || I >= length || J < 0 || J >= width)
       return false;
     if (I == target.i && J == target.j)
       return false;
@@ -88,17 +88,17 @@ public:
   ** change the position value to that of prev position + 1
   */
   void travelByBFS() {
-    queue<coord> planedToVisit;
+    queue<coord> planedToVisit = {};
     // initiate the queue
     planedToVisit.push(target);
 
     while (!planedToVisit.empty()) {
       coord current = planedToVisit.front();
       planedToVisit.pop();
+      outputV[current.i][current.j] = current.distance;
 
-      add4CasesToQueue(planedToVisit, current.i, current.i, current.distance);
-
-      outputV[current.i][current.j] = outputV[I][J] + 1;
+      add4CasesToQueue(planedToVisit, current.i, current.j,
+                       current.distance + 1);
     }
   }
 
@@ -127,6 +127,6 @@ int main() {
   a.makeMap(m, n);
   a.input();
   a.findTarget();
-  a.travelByBFS(a.target.i, a.target.j);
+  a.travelByBFS();
   a.output();
 }
