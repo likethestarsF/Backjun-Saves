@@ -80,7 +80,7 @@ public:
     }
 
     // Output
-    // cout << '\n' << visited[exit.row][exit.col];
+    cout << visited[exit.row][exit.col];
   }
 
   void test() {
@@ -107,6 +107,6 @@ int main() {
   int n, m;
   cin >> n >> m;
   a.in(n, m);
-  // a.travelByBFS();
-  a.test();
+  a.travelByBFS();
+  // a.test();
 }
