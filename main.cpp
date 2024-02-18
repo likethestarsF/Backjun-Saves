@@ -1,8 +1,15 @@
-// 240218 5 #9086
+// date num #eg
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
+
+class my {
+
+public:
+
+};
 
 int main() {
   /* cin optimize */
@@ -10,14 +17,8 @@ int main() {
   cin.tie(NULL);
   cout.tie(NULL);
 
-  int n;
-  cin >> n;
-  while (n--) {
-    string str;
-    cin >> str;
+  /* clog switch */
+  // std::clog.setstate(std::ios_base::failbit);
 
-    cout << str[0];
-    cout << str[str.size() - 1];
-    cout << '\n';
-  }
+  my a;
 }
