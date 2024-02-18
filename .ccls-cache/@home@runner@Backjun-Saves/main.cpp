@@ -14,7 +14,7 @@ class my {
   int width, length;
   vector<vector<int>> inputV, outputV;
 
-  bool isValidCoordinate(int I, int J) {
+  bool isValidCoordinate(const int &I, const int &J) {
     if (I < 0 || I >= length || J < 0 || J >= width) // boundary check goes 1st
       return false;
     if (inputV[I][J] == 0)
@@ -28,8 +28,8 @@ class my {
   }
 
   // check for 4 direction of starting point
-  void add4CasesToQueue(queue<coord> &planedToVisit, int I, int J,
-                        int distance) {
+  void add4CasesToQueue(queue<coord> &planedToVisit, const int &I, const int &J,
+                        const int &distance) {
     // up
     if (isValidCoordinate(I - 1, J)) {
       planedToVisit.push({I - 1, J, distance});
