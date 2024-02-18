@@ -7,11 +7,11 @@
 using namespace std;
 
 class my {
-  vector<vector<bool>> table;
   int startPoint;
   int numVertex;
 
 public:
+  vector<vector<bool>> table;
   void input(const int &numOfVertex, const int &numOfEdge,
              const int &startingVertex) {
     // init the table for graph
@@ -31,29 +31,32 @@ public:
   }
 
   // use stack
-  void DFS() {
+  void DFS(vector<vector<bool>> table) {
     stack<int> toVisit = {};
     vector<bool> visited(numVertex, false);
     toVisit.push(startPoint);
-    cout << startPoint + 1 << " ";
 
     while (!toVisit.empty()) {
       int current = toVisit.top();
 
+      if (!visited[current])
+        cout << current + 1 << ' ';
+      visited[current] = true;
+
       bool flag = true;
-      for (int i = numVertex - 1; i >= 0; i--) {
+      for (int i = 0; i < numVertex; i++) {
         if (!visited[i] && table[current][i] && i != startPoint) {
           toVisit.push(i);
-          visited[i] = true;
-          cout << i + 1 << ' ';
+          table[i][current] = false;
+          table[current][i] = false;
           flag = false;
           break;
         }
       }
-      if (flag) {
+      if (flag)
         toVisit.pop();
-      }
     }
+
     cout << '\n';
   }
 
@@ -93,6 +96,6 @@ int main() {
   int n, m, v;
   cin >> n >> m >> v;
   a.input(n, m, v);
-  a.DFS();
+  a.DFS(a.table);
   a.BFS();
 }
