@@ -6,7 +6,7 @@ using namespace std;
 
 struct node {
   int length;
-  char next;
+  bool nextIsI;
 };
 
 class my {
@@ -24,70 +24,44 @@ public:
   // c is only I or O
   // We have to Find IOIOI...
   // Length of P = 2*n + 1
+  // I : true / O : false
 
   void inputChar() {
     queue<node> checkList = {};
     for (int i = 0; i < length; i++) {
       cin >> c;
-      clog << "C : " << c << endl;
-
-      // insert new node to checkList
-      if (c == 'I') {
-        node newNode = {2 * nForP + 1, 'I'};
-        checkList.push(newNode);
-      }
-
-      else if (c == 'O') {
-      } else {
-        clog << "error" << endl;
-      }
-
-      if (checkList.empty())
-        continue;
+      bool isI = (c == 'I') ? true : false;
 
       // check for all nodes that we have
-      else {
+      if (!checkList.empty()) {
         int repeat = checkList.size();
 
         while (repeat--) {
           node current = checkList.front();
           checkList.pop();
 
-          if (current.length == 0) {
-            clog << "Case confirm" << endl;
-            cnt++;
-          }
-
-          else if (current.next == c) {
-            char next;
-            if (current.next == 'I')
-              next = 'O';
-            else
-              next = 'I';
-
-            checkList.push({current.length - 1, next});
-            clog << "push: " << current.length - 1 << " " << next << endl;
-          }
-
-          else { // erase wrong node : do not push
-            clog << "erase wrong case" << endl;
+          if (current.nextIsI == isI) {
+            if (current.length == 1)
+              cnt++;
+            else {
+              bool next;
+              if (current.nextIsI)
+                next = false;
+              else
+                next = true;
+              checkList.push({current.length - 1, next});
+            }
           }
         }
       }
-    }
 
-    // last check if there is 0
-    if (!checkList.empty()) {
-      int repeat = checkList.size();
-      while (repeat--) {
-        node current = checkList.front();
-        checkList.pop();
-
-        if (current.length == 0) {
-          cnt++;
-        };
+      // insert new node to checkList
+      if (isI) {
+        node newNode = {2 * nForP, false};
+        checkList.push(newNode);
       }
-    }
+
+    } // for end
   }
 };
 
