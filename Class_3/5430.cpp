@@ -9,15 +9,19 @@ using namespace std;
 class my {
   string command;
   int numOfArr;
-  deque<int> nList;
   string arr;
   bool isReversed = false;
   bool isError = false;
 
 public:
-  void input() {
+  void body() {
+    deque<int> nList = {};
+    input(nList);
+    exeCommand(nList);
+    output(nList);
+  }
+  template <typename T> void input(T &nList) {
     // init constants.
-    nList.clear();
     isReversed = false;
     isError = false;
 
@@ -39,7 +43,7 @@ public:
     }
   }
 
-  void exeCommand() {
+  template <typename T> void exeCommand(T &nList) {
     for (const auto c : command) {
       if (c == 'R') {
         isReversed = !isReversed;
@@ -58,31 +62,33 @@ public:
     }
   }
 
-  void output() {
-    if (isError)
+  template <typename T> void output(T &nList) {
+    if (isError) {
       cout << "error" << '\n';
+      return; // EXIT: output function
+    }
+    cout << '[';
+
+    if (nList.size() == 0) {
+    }
 
     else if (isReversed) {
-      cout << '[';
-
       for (int i = nList.size() - 1; i > 0; i--) {
         cout << nList[i];
         cout << ',';
       }
       cout << nList.front();
-      cout << "]\n";
     }
 
     else {
-      cout << '[';
-
       for (int i = 0; i < nList.size() - 1; i++) {
         cout << nList[i];
         cout << ',';
       }
       cout << nList.back();
-      cout << "]\n";
     }
+
+    cout << "]\n";
   }
 };
 
@@ -99,8 +105,6 @@ int main() {
   int t;
   cin >> t;
   while (t--) {
-    a.input();
-    a.exeCommand();
-    a.output();
+    a.body();
   }
 }
