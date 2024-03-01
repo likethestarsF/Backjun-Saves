@@ -1,42 +1,91 @@
-// 240229 3 #6064
+// 240301 2 #7569
 #include <algorithm>
 #include <iostream>
-#include <string>
+#include <queue>
 #include <vector>
 using namespace std;
 
+struct coord {
+  short h, l, w;
+};
+
 class my {
-  // 1. If <M:N> represents the lastest year of Inka calendar,
-  // find XX : <x:y> is the XXth year.
-  // 2. If <x:y> is invalid expression, return -1.
-  // M, N | [1.40000]
-  int M, N, x, y;
+  short width, length, heigth;
+  vector<vector<vector<int>>> tomato;
+  queue<coord> list; // push unripe tomato (turn it to ripe)
 
 public:
-  void input() { cin >> M >> N >> x >> y; }
+  int dayCnt = 0;
+  void input() { cin >> width >> length >> heigth; }
+  void input2() {
+    tomato.resize(heigth, vector<vector<int>>(length, vector<int>(width)));
+    for (int h = 0; h < heigth; h++) {
+      for (int l = 0; l < length; l++) {
+        for (int w = 0; w < width; w++) {
+          cin >> tomato[h][l][w];
+        }
+      }
+    }
+  }
 
-  int yearCalculator() {
-    int xVar = 1, yVar = 1;
-    int yearCnt = 1;
+  // for initialize
+  void findMature() {
+    for (int h = 0; h < heigth; h++) {
+      for (int l = 0; l < length; l++) {
+        for (int w = 0; w < width; w++) {
+          if (tomato[h][l][w] == 1) {
+            // 6 direction push
+            listPush(h, l, w);
+          }
+        }
+      }
+    }
+  }
 
-    while (true) {
-      if (xVar == x && yVar == y)
-        return yearCnt; // EXIT(func) : answer
+  void listPush(short h, short l, short w) {
+    short dH[6] = {1, -1, 0, 0, 0, 0};
+    short dL[6] = {0, 0, 1, -1, 0, 0};
+    short dW[6] = {0, 0, 0, 0, 1, -1};
 
-      if (xVar == M && yVar == N)
-        return -1; // EXIT(func) : when the lastest year reached - 2. case
+    for (int i = 0; i < 6; i++) {
+      short newH = h + dH[i];
+      short newL = l + dL[i];
+      short newW = w + dW[i];
+      // boundary Check
+      if (newH >= 0 && newL >= 0 && newW >= 0 && newH < heigth &&
+          newL < length && newW < width) {
+        // is it unripe?
+        if (tomato[newH][newL][newW] == 0) {
+          list.push({newH, newL, newW});
+          tomato[newH][newL][newW] = 1; // update tomato 3Dvector
+        }
+      }
+    }
+  }
 
-      if (xVar == M)
-        xVar = 1;
-      else
-        xVar++;
+  void BFS() {
+    while (list.size() > 0) {
+      int size = list.size();
+      while (size--) { // pop every existed elems
+        coord current = list.front();
+        list.pop();
+        listPush(current.h, current.l, current.w);
+      }
 
-      if (yVar == N)
-        yVar = 1;
-      else
-        yVar++;
+      dayCnt++;
+    } // entire while end
+  }
 
-      yearCnt++;
+  void ripeCheck() {
+    for (int h = 0; h < heigth; h++) {
+      for (int l = 0; l < length; l++) {
+        for (int w = 0; w < width; w++) {
+          if (tomato[h][l][w] == 0) {
+            dayCnt = -1;
+            break;
+          }
+        }
+      }
     }
   }
 };
@@ -51,10 +100,10 @@ int main() {
   // std::clog.setstate(std::ios_base::failbit);
 
   my a;
-  int t;
-  cin >> t;
-  while (t--) {
-    a.input();
-    cout << a.yearCalculator() << "\n";
-  }
+  a.input();
+  a.input2();
+  a.findMature();
+  a.BFS();
+  a.ripeCheck();
+  cout << a.dayCnt;
 }
