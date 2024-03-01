@@ -12,6 +12,7 @@ struct coord {
 class my {
   short width, length, heigth;
   vector<vector<vector<int>>> tomato;
+  vector<vector<vector<bool>>> tomatoVisit;
   queue<coord> list; // push unripe tomato (turn it to ripe)
 
 public:
@@ -19,6 +20,8 @@ public:
   void input() { cin >> width >> length >> heigth; }
   void input2() {
     tomato.resize(heigth, vector<vector<int>>(length, vector<int>(width)));
+    tomatoVisit.resize(
+        heigth, vector<vector<bool>>(length, vector<bool>(width, false)));
     for (int h = 0; h < heigth; h++) {
       for (int l = 0; l < length; l++) {
         for (int w = 0; w < width; w++) {
@@ -34,8 +37,8 @@ public:
       for (int l = 0; l < length; l++) {
         for (int w = 0; w < width; w++) {
           if (tomato[h][l][w] == 1) {
-            // 6 direction push
-            listPush(h, l, w);
+            listPush(h, l, w); // 6 direction push
+            tomatoVisit[h][l][w] = true;
           }
         }
       }
@@ -54,10 +57,13 @@ public:
       // boundary Check
       if (newH >= 0 && newL >= 0 && newW >= 0 && newH < heigth &&
           newL < length && newW < width) {
-        // is it unripe?
-        if (tomato[newH][newL][newW] == 0) {
-          list.push({newH, newL, newW});
-          tomato[newH][newL][newW] = 1; // update tomato 3Dvector
+        // is it visited?
+        if (tomatoVisit[newH][newL][newW] == false) {
+          // is it unripe?
+          if (tomato[newH][newL][newW] == 0) {
+            list.push({newH, newL, newW});
+            tomatoVisit[newH][newL][newW] = true;
+          }
         }
       }
     }
@@ -67,13 +73,15 @@ public:
     while (list.size() > 0) {
       int size = list.size();
       while (size--) { // pop every existed elems
+        clog << "size : " << size << " list elem : " << list.size() << endl;
         coord current = list.front();
         list.pop();
+        tomato[current.h][current.l][current.w] = 1; // update 3D vector
         listPush(current.h, current.l, current.w);
       }
 
       dayCnt++;
-    } // entire while end
+    }
   }
 
   void ripeCheck() {
@@ -97,7 +105,7 @@ int main() {
   cout.tie(NULL);
 
   /* clog switch */
-  // std::clog.setstate(std::ios_base::failbit);
+  std::clog.setstate(std::ios_base::failbit);
 
   my a;
   a.input();
