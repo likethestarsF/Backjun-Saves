@@ -1,99 +1,101 @@
-// 240301 2 #7569
+// date num #eg
 #include <algorithm>
+#include <bits/stdc++.h>
 #include <iostream>
-#include <queue>
 #include <vector>
 using namespace std;
 
-struct coord {
-  short h, l, w;
+// comparator function to make min heap : from geeksforgeeks
+struct greaters {
+  bool operator()(const long &a, const long &b) const { return a > b; }
 };
 
 class my {
-  short width, length, heigth;
-  vector<vector<vector<int>>> tomato;
-  vector<vector<vector<bool>>> tomatoVisit;
-  queue<coord> list; // push unripe tomato (turn it to ripe)
+  int nOfCmds;
+  vector<long> maxHeap = {};
+  vector<long> minHeap = {};
+  int cntI = 0, cntD = 0;
+  long deletedMax = LONG_MAX;
+  long deletedMin = LONG_MIN;
+
+  void pushMax(const long &x) {
+    maxHeap.push_back(x);
+    push_heap(maxHeap.begin(), maxHeap.end());
+  }
+  void pushMin(const long &x) {
+    minHeap.push_back(x);
+    push_heap(minHeap.begin(), minHeap.end(), greaters());
+  }
 
 public:
-  int dayCnt = 0;
-  void input() { cin >> width >> length >> heigth; }
-  void input2() {
-    tomato.resize(heigth, vector<vector<int>>(length, vector<int>(width)));
-    tomatoVisit.resize(
-        heigth, vector<vector<bool>>(length, vector<bool>(width, false)));
-    for (int h = 0; h < heigth; h++) {
-      for (int l = 0; l < length; l++) {
-        for (int w = 0; w < width; w++) {
-          cin >> tomato[h][l][w];
-        }
-      }
+  my() {
+    // initialize Heap
+    make_heap(maxHeap.begin(), maxHeap.end());
+    make_heap(minHeap.begin(), minHeap.end(), greaters());
+  }
+
+  void makeQueue() {
+    cin >> nOfCmds;
+    for (int i = 0; i < nOfCmds; i++) {
+      char DI;
+      long n;
+      cin >> DI >> n;
+
+      exeCmd(DI, n);
     }
   }
 
-  // for initialize
-  void findMature() {
-    for (int h = 0; h < heigth; h++) {
-      for (int l = 0; l < length; l++) {
-        for (int w = 0; w < width; w++) {
-          if (tomato[h][l][w] == 1) {
-            listPush(h, l, w); // 6 direction push
-            tomatoVisit[h][l][w] = true;
-          }
+  void exeCmd(const char &DI, const long &n) {
+    if (DI == 'I') {
+      pushMax(n);
+      pushMin(n);
+      cntI++;
+    }
+
+    else if (DI == 'D') {
+      if (n == 1) { // Delete Max
+        if (maxHeap.size() > 0) {
+          pop_heap(maxHeap.begin(), maxHeap.end());
+          long temp = maxHeap.back();
+          deletedMax = (temp < deletedMax) ? temp : deletedMax;
+          maxHeap.pop_back();
+          cntD++;
+        }
+      } else { // Delete Min
+        if (minHeap.size() > 0) {
+          pop_heap(minHeap.begin(), minHeap.end(), greaters());
+          long temp = minHeap.back();
+          deletedMin = (temp > deletedMin) ? temp : deletedMin;
+          minHeap.pop_back();
+          cntD++;
         }
       }
     }
+
+    else // Input ERR
+      cerr << "err:exeCmd input" << endl;
   }
 
-  void listPush(short h, short l, short w) {
-    short dH[6] = {1, -1, 0, 0, 0, 0};
-    short dL[6] = {0, 0, 1, -1, 0, 0};
-    short dW[6] = {0, 0, 0, 0, 1, -1};
+  void findMinMax() {
+    long min = minHeap.front();
+    long max = maxHeap.front();
 
-    for (int i = 0; i < 6; i++) {
-      short newH = h + dH[i];
-      short newL = l + dL[i];
-      short newW = w + dW[i];
-      // boundary Check
-      if (newH >= 0 && newL >= 0 && newW >= 0 && newH < heigth &&
-          newL < length && newW < width) {
-        // is it visited?
-        if (tomatoVisit[newH][newL][newW] == false) {
-          // is it unripe?
-          if (tomato[newH][newL][newW] == 0) {
-            list.push({newH, newL, newW});
-            tomatoVisit[newH][newL][newW] = true;
-          }
-        }
-      }
+    if (cntI - cntD <= 0)
+      cout << "EMPTY\n";
+    else {
     }
+
+    cout << max << ' ' << min << '\n';
   }
 
-  void BFS() {
-    while (list.size() > 0) {
-      int size = list.size();
-      while (size--) { // pop every existed elems
-        clog << "size : " << size << " list elem : " << list.size() << endl;
-        coord current = list.front();
-        list.pop();
-        tomato[current.h][current.l][current.w] = 1; // update 3D vector
-        listPush(current.h, current.l, current.w);
-      }
-
-      dayCnt++;
+  void test() {
+    clog << "maxHeap:" << endl;
+    for (auto i : maxHeap) {
+      clog << i << ' ';
     }
-  }
-
-  void ripeCheck() {
-    for (int h = 0; h < heigth; h++) {
-      for (int l = 0; l < length; l++) {
-        for (int w = 0; w < width; w++) {
-          if (tomato[h][l][w] == 0) {
-            dayCnt = -1;
-            break;
-          }
-        }
-      }
+    clog << "\nminHeap:" << endl;
+    for (auto i : minHeap) {
+      clog << i << ' ';
     }
   }
 };
@@ -105,13 +107,13 @@ int main() {
   cout.tie(NULL);
 
   /* clog switch */
-  std::clog.setstate(std::ios_base::failbit);
+  // std::clog.setstate(std::ios_base::failbit);
 
-  my a;
-  a.input();
-  a.input2();
-  a.findMature();
-  a.BFS();
-  a.ripeCheck();
-  cout << a.dayCnt;
+  int t;
+  cin >> t;
+  while (t--) {
+    my a;
+    a.makeQueue();
+    a.findMinMax();
+  }
 }
