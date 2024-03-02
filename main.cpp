@@ -5,36 +5,33 @@
 #include <vector>
 using namespace std;
 
-// comparator function to make min heap : from geeksforgeeks
-struct greaters {
-  bool operator()(const long &a, const long &b) const { return a > b; }
-};
-
 class my {
-  int nOfCmds;
-  vector<long> maxHeap = {};
-  vector<long> minHeap = {};
-  multiset<long> deletedFromMax = {};
-  multiset<long> deletedFromMin = {};
-  int cntI = 0, cntD = 0;
+  struct cmpForMin {
+    bool operator()(const pair<long, int> &a1,
+                    const pair<long, int> &a2) const {
+      return a1.first > a2.first;
+    }
+  };
 
-  void pushMax(const long &x) {
-    maxHeap.push_back(x);
-    push_heap(maxHeap.begin(), maxHeap.end());
-  }
-  void pushMin(const long &x) {
-    minHeap.push_back(x);
-    push_heap(minHeap.begin(), minHeap.end(), greaters());
-  }
+  struct cmpForMax {
+    bool operator()(const pair<long, int> &a1,
+                    const pair<long, int> &a2) const {
+      return a1.first < a2.first;
+    }
+  };
 
 public:
-  my() {
-    // initialize Heap
-    maxHeap.reserve(1000000);
-    minHeap.reserve(1000000);
-    make_heap(maxHeap.begin(), maxHeap.end());
-    make_heap(minHeap.begin(), minHeap.end(), greaters());
-  }
+  int nOfCmds;
+  // priority, counter for identification
+  priority_queue<pair<long, int>, vector<pair<long, int>>, cmpForMin> minHeap =
+      {};
+  priority_queue<pair<long, int>, vector<pair<long, int>>, cmpForMax> maxHeap =
+      {};
+
+
+  int indexCnt = 0;
+
+  my() {}
 
   void makeQueue() {
     cin >> nOfCmds;
@@ -47,97 +44,87 @@ public:
     }
   }
 
+  void insert(long val) {
+    minHeap.push({val, indexCnt});
+    maxHeap.push({val, indexCnt});
+    indexCnt++;
+  }
+
+  void DelMax() {
+    if (maxHeap.empty())
+      return;
+    auto val = maxHeap.top();
+    maxHeap.pop();
+    // Del Min also
+    DelMintoo(val.second);
+  }
+  void DelMin() {
+    if (minHeap.empty())
+      return;
+    auto val = minHeap.top();
+    minHeap.pop();
+    // Del Max also
+    DelMaxtoo(val.second);
+  }
+
+  /* When I have to delete by index in priority_queue
+  ** make temp queue and push all elements except the one to be deleted
+  ** then, SWAP
+  */
+  void DelMintoo(int &cnt) {
+    priority_queue<pair<long, int>, vector<pair<long, int>>, cmpForMin> temp =
+        {};
+    while (!minHeap.empty()) {
+      if (minHeap.top().second != cnt) {
+        temp.push(minHeap.top());
+      }
+      minHeap.pop();
+    }
+    minHeap.swap(temp);
+  }
+  void DelMaxtoo(int &cnt) {
+    priority_queue<pair<long, int>, vector<pair<long, int>>, cmpForMax> temp =
+        {};
+    while (!maxHeap.empty()) {
+      if (maxHeap.top().second != cnt) {
+        temp.push(maxHeap.top());
+      }
+      maxHeap.pop();
+    }
+    maxHeap.swap(temp);
+  }
+
   void exeCmd(const char &DI, const long &n) {
     if (DI == 'I') {
-      pushMax(n);
-      pushMin(n);
-      cntI++;
+      insert(n);
     }
 
     else if (DI == 'D') {
       if (n == 1) { // Delete Max
-        if (maxHeap.size() > 0) {
-          pop_heap(maxHeap.begin(), maxHeap.end());
-          deletedFromMax.insert(maxHeap.back());
-          maxHeap.pop_back();
-          cntD++;
-        }
-      } else { // Delete Min
-        if (minHeap.size() > 0) {
-          pop_heap(minHeap.begin(), minHeap.end(), greaters());
-          deletedFromMin.insert(minHeap.back());
-          minHeap.pop_back();
-          cntD++;
-        }
+        DelMax();
+      } else if (DI == -1) { // Delete Min
+        DelMin();
       }
     }
-
-    else // Input ERR
-      cerr << "err:exeCmd input" << endl;
   }
 
-  void findMinMax() {
-    const int delta = cntI - cntD;
-    if (delta <= 0 || maxHeap.empty() || minHeap.empty()) {
+  void output() {
+    if (minHeap.empty() || maxHeap.empty()) {
       cout << "EMPTY\n";
       return;
     }
 
-    // PRUNE OF 2 HEAPS
-    vector<long> newMin = {};
-    auto sizeOfMin = minHeap.size();
-    /* If elem of minHeap exist in deletedFromMax
-    ** 1. delete it from deletedFromMax,
-    ** 2. If not, push it to new maxHeap
-    ** to avoid error that happens while erasing when using index i
-    */
-    for (int i = 0; i < sizeOfMin; i++) {
-      if (deletedFromMax.find(minHeap[i]) != deletedFromMax.end()) {
-        deletedFromMax.erase(deletedFromMax.find(minHeap[i]));
-      } else {
-        newMin.push_back(minHeap[i]);
-      }
-    }
-    minHeap.clear(); // we don't need it anymore
-
-    // Totally same as above
-    vector<long> newMax = {};
-    auto sizeOfMax = maxHeap.size();
-    for (int i = 0; i < sizeOfMax; i++) {
-      if (deletedFromMin.find(maxHeap[i]) != deletedFromMin.end()) {
-        deletedFromMin.erase(deletedFromMin.find(maxHeap[i]));
-      } else {
-        newMax.push_back(maxHeap[i]);
-      }
-    }
-    maxHeap.clear();
-
-    // compare squeezed heap's size and the delta
-    // then remove more elem in
-    sort(newMax.begin(), newMax.end(), greaters()); // front is the biggest
-    sort(newMin.begin(), newMin.end(), greaters()); // back is the smallest
-
-    for (int i = 0; i < deletedFromMax.size(); i++) {
-      newMax.pop_back();
-    }
-    for (int i = 0; i < deletedFromMin.size(); i++) {
-      newMin.pop_back();
-    }
-
-    long max = newMax.front();
-    long min = newMin.back();
-
+    long max = maxHeap.top().first;
+    long min = minHeap.top().first;
     cout << max << ' ' << min << '\n';
   }
 
-  void test() {
-    clog << "maxHeap:" << endl;
-    for (auto i : maxHeap) {
-      clog << i << ' ';
-    }
-    clog << "\nminHeap:" << endl;
-    for (auto i : minHeap) {
-      clog << i << ' ';
+  template <typename T> void test(T v) {
+
+    clog << "maxHeap : " << endl;
+    while (!v.empty()) {
+      clog << v.top().first << ' ' << v.top().second << endl;
+      v.pop();
     }
   }
 };
@@ -156,7 +143,7 @@ int main() {
   while (t--) {
     my a;
     a.makeQueue();
-    a.findMinMax();
-    // a.test();
+    a.output();
+    // a.test(a.maxHeap);
   }
 }
