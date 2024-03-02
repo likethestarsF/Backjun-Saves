@@ -6,32 +6,12 @@
 using namespace std;
 
 class my {
-  struct cmpForMin {
-    bool operator()(const pair<long, int> &a1,
-                    const pair<long, int> &a2) const {
-      return a1.first > a2.first;
-    }
-  };
-
-  struct cmpForMax {
-    bool operator()(const pair<long, int> &a1,
-                    const pair<long, int> &a2) const {
-      return a1.first < a2.first;
-    }
-  };
+  int nOfCmds;
+  map<long, int> mapElem = {};
 
 public:
-  int nOfCmds;
-  // priority, counter for identification
-  priority_queue<pair<long, int>, vector<pair<long, int>>, cmpForMin> minHeap =
-      {};
-  priority_queue<pair<long, int>, vector<pair<long, int>>, cmpForMax> maxHeap =
-      {};
-
-
-  int indexCnt = 0;
-
-  my() {}
+  priority_queue<long, vector<long>, greater<long>> minHeap = {};
+  priority_queue<long, vector<long>, less<long>> maxHeap = {};
 
   void makeQueue() {
     cin >> nOfCmds;
@@ -44,54 +24,57 @@ public:
     }
   }
 
-  void insert(long val) {
-    minHeap.push({val, indexCnt});
-    maxHeap.push({val, indexCnt});
-    indexCnt++;
+  void insert(const long &val) {
+    minHeap.push(val);
+    maxHeap.push(val);
+
+    if (mapElem.find(val) == mapElem.end()) {
+      mapElem.insert({val, 1});
+    } else {
+      mapElem[val]++;
+    }
   }
 
   void DelMax() {
     if (maxHeap.empty())
-      return;
-    auto val = maxHeap.top();
+      return; // exception
+
+    while (!maxHeap.empty() && mapElem.find(maxHeap.top()) == mapElem.end()) {
+      maxHeap.pop();
+    }
+
+    if (maxHeap.empty())
+      return; // exception
+
+    long val = maxHeap.top();
     maxHeap.pop();
-    // Del Min also
-    DelMintoo(val.second);
+
+    // update mapElem
+    mapElem[val]--;
+    // remove key if value is 0
+    if (mapElem.find(val) != mapElem.end() && mapElem[val] == 0) {
+      mapElem.erase(val);
+    }
   }
+  // totally same as above
   void DelMin() {
     if (minHeap.empty())
       return;
-    auto val = minHeap.top();
-    minHeap.pop();
-    // Del Max also
-    DelMaxtoo(val.second);
-  }
 
-  /* When I have to delete by index in priority_queue
-  ** make temp queue and push all elements except the one to be deleted
-  ** then, SWAP
-  */
-  void DelMintoo(int &cnt) {
-    priority_queue<pair<long, int>, vector<pair<long, int>>, cmpForMin> temp =
-        {};
-    while (!minHeap.empty()) {
-      if (minHeap.top().second != cnt) {
-        temp.push(minHeap.top());
-      }
+    while (!minHeap.empty() && mapElem.find(minHeap.top()) == mapElem.end()) {
       minHeap.pop();
     }
-    minHeap.swap(temp);
-  }
-  void DelMaxtoo(int &cnt) {
-    priority_queue<pair<long, int>, vector<pair<long, int>>, cmpForMax> temp =
-        {};
-    while (!maxHeap.empty()) {
-      if (maxHeap.top().second != cnt) {
-        temp.push(maxHeap.top());
-      }
-      maxHeap.pop();
+
+    if (minHeap.empty())
+      return;
+
+    long val = minHeap.top();
+    minHeap.pop();
+
+    mapElem[val]--;
+    if (mapElem.find(val) != mapElem.end() && mapElem[val] == 0) {
+      mapElem.erase(val);
     }
-    maxHeap.swap(temp);
   }
 
   void exeCmd(const char &DI, const long &n) {
@@ -102,30 +85,30 @@ public:
     else if (DI == 'D') {
       if (n == 1) { // Delete Max
         DelMax();
-      } else if (DI == -1) { // Delete Min
+      } else if (n == -1) { // Delete Min
         DelMin();
       }
     }
   }
 
+  template <typename T> void clean(T &heap) {
+    while (!heap.empty() && mapElem.find(heap.top()) == mapElem.end()) {
+      heap.pop();
+    }
+  }
+
   void output() {
+    clean(minHeap);
+    clean(maxHeap);
+
     if (minHeap.empty() || maxHeap.empty()) {
       cout << "EMPTY\n";
       return;
     }
 
-    long max = maxHeap.top().first;
-    long min = minHeap.top().first;
+    long max = maxHeap.top();
+    long min = minHeap.top();
     cout << max << ' ' << min << '\n';
-  }
-
-  template <typename T> void test(T v) {
-
-    clog << "maxHeap : " << endl;
-    while (!v.empty()) {
-      clog << v.top().first << ' ' << v.top().second << endl;
-      v.pop();
-    }
   }
 };
 
@@ -144,6 +127,5 @@ int main() {
     my a;
     a.makeQueue();
     a.output();
-    // a.test(a.maxHeap);
   }
 }
