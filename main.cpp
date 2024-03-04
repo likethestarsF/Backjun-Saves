@@ -138,17 +138,38 @@ public:
             break;
 
           // swap and update parent
+          swap(heap[parent], heap[child]);
+          parent = child;
         }
         // case 3: parent is bigger
         else {
+          // swap and update parent
           swap(heap[parent], heap[child]);
           parent = child;
-          // swap and update parent
         }
       }
     }
   }
   void up_heap() { // for push
+    /* Compare Child -> parent
+    ** 1. Boundary check for parent 
+    **
+    */
+
+    int child = heap.size() - 1;
+    int parent;
+    while (true) {
+      parent = child / 2;
+      if(parent < 1)
+        break;
+
+      //case 1
+      if() {}
+      //case 2
+      else  if() {}
+      //case 3
+      else {}
+    }
   }
 };
 
