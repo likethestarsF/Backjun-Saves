@@ -6,7 +6,7 @@
 using namespace std;
 
 class my {
-  vector<int> DP;
+  vector<long long> DP;
 
 public:
   my() {
@@ -17,7 +17,7 @@ public:
   }
 
   // An = A(n-2) + A(n-3) (n>=3)
-  int answer(const int &target) {
+  long long answer(const int &target) {
     if (target < 3)
       return DP[target];
 
