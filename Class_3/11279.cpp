@@ -11,7 +11,7 @@ class my {
 
 public:
   my() {
-    heap.reserve(100000);
+    heap.reserve(100001);
     // heap doesn't use index 0
     heap.push_back(-1);
   }
@@ -26,9 +26,10 @@ public:
 
   void pop() {
     // 1. No elem
-    if (heap.size() == 1)
+    if (heap.size() == 1) {
       cout << 0 << '\n';
-    return; // EXIT
+      return; // EXIT
+    }
 
     cout << heap[1] << '\n';
 
@@ -70,11 +71,11 @@ public:
       childR = 2 * parent + 1;
 
       // no child: EXIT
-      if (childL > heap.size())
+      if (childL > heap.size() - 1)
         break; // EXIT 1-1.
 
       // only childL exists
-      if (childL == heap.size()) {
+      if (childL == heap.size() - 1) {
         if (heap[parent] < heap[childL]) {
           swap(heap[parent], heap[childL]);
           parent = childL;
@@ -110,7 +111,7 @@ public:
     ** 2-2. swapped parent became the child
     **and compare again with the parent.
     */
-    int child = heap.size();
+    int child = heap.size() - 1;
     int parent;
 
     while (true) {
