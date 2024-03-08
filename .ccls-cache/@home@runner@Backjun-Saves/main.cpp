@@ -1,78 +1,103 @@
-// 240308 2 #20529
+// 240308 3 #21736
 #include <algorithm>
 #include <iostream>
-#include <string>
+#include <queue>
 #include <vector>
 using namespace std;
 
-struct person {
-  bool isE, isS, isT, isJ;
+struct coord {
+  int x, y;
 };
 
-class MBTI {
-  vector<person> list = {};
-  vector<int> check = {};
+class findFriends {
+  vector<vector<bool>> campus = {};
+  vector<vector<bool>> visited{};
+  int row, col;
 
-  int compare(person &a, person &b) {
-    int distance = 4;
+  coord start;
+  vector<coord> friends = {};
+  vector<coord> block = {};
 
-    if (a.isE == b.isE)
-      distance--;
-    if (a.isS == b.isS)
-      distance--;
-    if (a.isT == b.isT)
-      distance--;
-    if (a.isJ == b.isJ)
-      distance--;
+  int numOfMet = 0;
 
-    return distance;
-  }
+  void pushing(queue<coord> &toPush, coord &a) {
+    int dx[4] = {1, -1, 0, 0};
+    int dy[4] = {0, 0, 1, -1};
 
-  int transToInt(person &a) {
-    int result = 0;
-    result += a.isE * 8;
-    result += a.isS * 4;
-    result += a.isT * 2;
-    result += a.isJ;
-    return result;
+    for (int i = 0; i < 4; i++) {
+      int newX = a.x + dx[i];
+      int newY = a.y + dy[i];
+      // 1. Boundary Check - Exclude
+      if (newX < 0 || newX >= col || newY < 0 || newY >= row)
+        continue;
+
+      // 2. is it visited? - Exclude
+      if (visited[newY][newX] == true)
+        continue;
+
+      // push the new coord to the queue & update
+      toPush.push({newX, newY});
+      visited[newY][newX] = true;
+    }
   }
 
 public:
-  MBTI() { check.resize(16, 0); }
-
-  void input(string &str) {
-    int i = 0;
-    person temp;
-    temp.isE = str[i] == 'E';
-    temp.isS = str[i + 1] == 'S';
-    temp.isT = str[i + 2] == 'T';
-    temp.isJ = str[i + 3] == 'J';
-
-    // MBTI 16 cases :  0000(INFP) ~ 1111(ESTJ)
-    int temp_int = transToInt(temp);
-
-    // push_back the same elem less than 4 times (maximum 3 times)
-    if (check[temp_int] < 3) {
-      check[temp_int]++;
-      list.push_back(temp);
-    }
+  findFriends(int &n, int &m) {
+    row = n;
+    col = m;
+    campus.resize(row, vector<bool>(col, false));
+    visited.resize(row, vector<bool>(col, false));
   }
 
-  int min = 12;
-  void body() {
-    int N = list.size();
-    for (int i = 0; i < N; i++) {
-      for (int j = i + 1; j < N; j++) {
-        for (int k = j + 1; k < N; k++) {
-          int sum = compare(list[i], list[j]) + compare(list[i], list[k]) +
-                    compare(list[j], list[k]);
-          min = (sum < min) ? sum : min;
+  /*
+  ** O == empty  : 0  ; visited : 0
+  ** P == friend : 1  ; visited : 0
+  ** X == block  : 0  ; visited : 1
+  ** I == start  : 0  ; visited : 1
+  */
+  void input() {
+    for (int y = 0; y < row; y++) {
+      for (int x = 0; x < col; x++) {
+        char c;
+        cin >> c;
+        if (c == 'P') {
+          friends.push_back({x, y});
+          campus[y][x] = true;
 
-          if (min == 0)
-            return;
+        } else if (c == 'X') {
+          block.push_back({x, y});
+          visited[y][x] = true;
+
+        } else if (c == 'I') {
+          start = {x, y};
+          visited[y][x] = true;
         }
       }
     }
+  }
+
+  void BFS() {
+    queue<coord> check = {};
+    // init the queue by start
+    pushing(check, start);
+
+    while (!check.empty()) {
+      coord cur = check.front();
+      check.pop();
+
+      // count the num of met friends
+      if (campus[cur.y][cur.x] == true)
+        numOfMet++;
+
+      pushing(check, cur);
+    }
+  }
+
+  void output() {
+    if (numOfMet == 0)
+      cout << "TT";
+    else
+      cout << numOfMet;
   }
 };
 
@@ -85,21 +110,10 @@ int main() {
   /* clog switch */
   // std::clog.setstate(std::ios_base::failbit);
 
-  int T;
-  cin >> T;
-  while (T--) {
-    MBTI a;
-
-    int N;
-    cin >> N;
-
-    while (N--) {
-      string str;
-      cin >> str;
-      a.input(str);
-    }
-
-    a.body();
-    cout << a.min << '\n';
-  }
+  int n, m;
+  cin >> n >> m;
+  findFriends a(n, m);
+  a.input();
+  a.BFS();
+  a.output();
 }
