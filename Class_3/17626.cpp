@@ -29,7 +29,7 @@ public:
 
     // Case 2 : choose two square numbers from listOfsquares
     for (int i1 = 0; i1 < listOfSquares.size(); i1++) {
-      for (int i2 = i1 + 1; i2 < listOfSquares.size(); i2++) {
+      for (int i2 = 0; i2 < listOfSquares.size(); i2++) {
         int sum = listOfSquares[i1] + listOfSquares[i2];
         if (sum == n) {
           result = 2;
