@@ -1,103 +1,79 @@
-// 240308 3 #21736
+// 240308 4 #1107
 #include <algorithm>
 #include <iostream>
-#include <queue>
+#include <string>
 #include <vector>
+#define MAX_CHANNEL 500000
 using namespace std;
 
-struct coord {
-  int x, y;
-};
+class remoteContoller {
+  int target, numBroken;
+  vector<bool> button = {};
+  const int curChannel = 100;
 
-class findFriends {
-  vector<vector<bool>> campus = {};
-  vector<vector<bool>> visited{};
-  int row, col;
+  bool IsItPossToInput(int n) {
+    // 1. boundary check
+    if (n < 0)
+      return false;
 
-  coord start;
-  vector<coord> friends = {};
-  vector<coord> block = {};
-
-  int numOfMet = 0;
-
-  void pushing(queue<coord> &toPush, coord &a) {
-    int dx[4] = {1, -1, 0, 0};
-    int dy[4] = {0, 0, 1, -1};
-
-    for (int i = 0; i < 4; i++) {
-      int newX = a.x + dx[i];
-      int newY = a.y + dy[i];
-      // 1. Boundary Check - Exclude
-      if (newX < 0 || newX >= col || newY < 0 || newY >= row)
-        continue;
-
-      // 2. is it visited? - Exclude
-      if (visited[newY][newX] == true)
-        continue;
-
-      // push the new coord to the queue & update
-      toPush.push({newX, newY});
-      visited[newY][newX] = true;
+    // 2. button availability check
+    string n_str = to_string(n);
+    for (auto &digit : n_str) {
+      if (!button.at(digit - 48)) {
+        return false;
+      }
     }
+
+    return true;
+  }
+
+  int withoutNumberButton() {
+    if (target >= curChannel)
+      return (target - curChannel);
+    else
+      return (curChannel - target);
+  }
+
+  // O(N) maybe
+  int bruteForce() {
+    for (int delta = 0; delta <= MAX_CHANNEL; delta++) {
+      // 1. + case
+      if (IsItPossToInput(target + delta)) {
+        clog << "1. " << target + delta << endl;
+        return (to_string(target + delta).length() + delta);
+      }
+
+      // 2. - case
+      if (IsItPossToInput(target - delta)) {
+        clog << "2. " << target - delta << endl;
+        return (to_string(target - delta).length() + delta);
+      }
+    }
+
+    return MAX_CHANNEL;
   }
 
 public:
-  findFriends(int &n, int &m) {
-    row = n;
-    col = m;
-    campus.resize(row, vector<bool>(col, false));
-    visited.resize(row, vector<bool>(col, false));
-  }
+  remoteContoller(int &n, int &m) {
+    target = n;              // n = [0, 500000]
+    numBroken = m;           // m = [0, 10]
+    button.resize(10, true); // [0,9]
 
-  /*
-  ** O == empty  : 0  ; visited : 0
-  ** P == friend : 1  ; visited : 0
-  ** X == block  : 0  ; visited : 1
-  ** I == start  : 0  ; visited : 1
-  */
-  void input() {
-    for (int y = 0; y < row; y++) {
-      for (int x = 0; x < col; x++) {
-        char c;
-        cin >> c;
-        if (c == 'P') {
-          friends.push_back({x, y});
-          campus[y][x] = true;
-
-        } else if (c == 'X') {
-          block.push_back({x, y});
-          visited[y][x] = true;
-
-        } else if (c == 'I') {
-          start = {x, y};
-          visited[y][x] = true;
-        }
-      }
-    }
-  }
-
-  void BFS() {
-    queue<coord> check = {};
-    // init the queue by start
-    pushing(check, start);
-
-    while (!check.empty()) {
-      coord cur = check.front();
-      check.pop();
-
-      // count the num of met friends
-      if (campus[cur.y][cur.x] == true)
-        numOfMet++;
-
-      pushing(check, cur);
+    for (int i = 0; i < m; i++) {
+      int temp;
+      cin >> temp;
+      button[temp] = false;
     }
   }
 
   void output() {
-    if (numOfMet == 0)
-      cout << "TT";
+    int a = withoutNumberButton();
+    int b = bruteForce();
+
+    if (a < b)
+      cout << a;
     else
-      cout << numOfMet;
+      cout << b;
   }
 };
 
@@ -108,12 +84,10 @@ int main() {
   cout.tie(NULL);
 
   /* clog switch */
-  // std::clog.setstate(std::ios_base::failbit);
+  std::clog.setstate(std::ios_base::failbit);
 
   int n, m;
   cin >> n >> m;
-  findFriends a(n, m);
-  a.input();
-  a.BFS();
+  remoteContoller a(n, m);
   a.output();
 }
