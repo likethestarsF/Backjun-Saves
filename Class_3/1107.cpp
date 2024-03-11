@@ -1,4 +1,5 @@
 // 240308 4 #1107
+// 240311 1 #1107
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -37,16 +38,16 @@ class remoteContoller {
   // O(N) maybe
   int bruteForce() {
     for (int delta = 0; delta <= MAX_CHANNEL; delta++) {
-      // 1. + case
-      if (IsItPossToInput(target + delta)) {
-        clog << "1. " << target + delta << endl;
-        return (to_string(target + delta).length() + delta);
-      }
-
-      // 2. - case
+      // 1. - case : smaller number tend to use less keys
       if (IsItPossToInput(target - delta)) {
         clog << "2. " << target - delta << endl;
         return (to_string(target - delta).length() + delta);
+      }
+
+      // 2. + case
+      if (IsItPossToInput(target + delta)) {
+        clog << "1. " << target + delta << endl;
+        return (to_string(target + delta).length() + delta);
       }
     }
 
