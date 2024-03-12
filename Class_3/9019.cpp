@@ -1,4 +1,5 @@
 // 240311 2 #9019
+// 240312 1 #9019
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -14,8 +15,9 @@ class DSLR {
   int a, b;
   vector<node> visited;
 
-  template <typename T> void quadCommand(T &checklist, int &regi) {
+  void quadCommand(queue<int> &checklist, const int &regi) {
     int toPush;
+
     // D
     toPush = D(regi);
     if (visited[toPush].usedCommand == 'X') {
@@ -63,30 +65,31 @@ class DSLR {
   }
 
   int L(int regi) {
-    int d[4]; // 0 1 2 3 -> 1 2 3 4
-    for (int i = 0; i < 4 - 1; i++) {
-      d[i] = regi / 10;
+    int d[4]; // 3 2 1 0 -> 2 1 0 3
+    for (int i = 0; i < 4; i++) {
+      d[i] = regi % 10;
       regi /= 10;
     }
-    d[3] = regi % 10;
 
-    return (d[1] * 1000 + d[2] * 100 + d[3] * 10 + d[0]);
+    return (d[2] * 1000 + d[1] * 100 + d[0] * 10 + d[3]);
   }
 
   int R(int regi) {
-    int d[4]; // 0 1 2 3 -> 1 2 3 4
-    for (int i = 0; i < 4 - 1; i++) {
-      d[i] = regi / 10;
+    int d[4]; // 3 2 1 0 -> 0 3 2 1
+    for (int i = 0; i < 4; i++) {
+      d[i] = regi % 10;
       regi /= 10;
     }
-    d[3] = regi % 10;
 
-    return (d[3] * 1000 + d[0] * 100 + d[1] * 10 + d[2]);
+    return (d[0] * 1000 + d[3] * 100 + d[2] * 10 + d[1]);
   }
 
 public:
-  DSLR(int &A, int &B) {
-    visited.resize(10000, {-1, 'X'});
+  DSLR(int A, int B) {
+    node initNode;
+    initNode.prev = -1;
+    initNode.usedCommand = 'X';
+    visited.resize(10000, initNode);
     a = A;
     b = B;
   }
@@ -103,7 +106,6 @@ public:
       // REACH THE END : IT IS ONE AND ONLY theoretically
       // -> need to backtracking visited vectors to find every cmd used till now
       if (cur == b) {
-        clog << "cur : " << cur << endl;
         return;
       }
 
