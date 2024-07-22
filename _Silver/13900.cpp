@@ -13,8 +13,8 @@ public:
   void body() {
     cin >> n;
 
-    int prevSum = 0;
-    int answerSum = 0;
+    long long int prevSum = 0;
+    long long int answerSum = 0;
     for (int i = 0; i < n; i++) {
       int temp;
       cin >> temp;
