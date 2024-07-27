@@ -3,7 +3,7 @@
 // 00:
 #include <algorithm>
 #include <iostream>
-#include <string>
+#include <math.h>
 #include <vector>
 using namespace std;
 
@@ -24,22 +24,22 @@ public:
 
       bool answerExist = false;
       int x = -1, y = -1;
-      for (int xtrial = 1; xtrial * l1 <= ltotal; xtrial++) {
-        for (int ytrial = 1; ytrial * l2 <= ltotal - xtrial * l1; ytrial++) {
+      for (int xtrial = 1; l1 * xtrial < ltotal; xtrial++) {
+        const int residual = ltotal - l1 * xtrial;
 
-          // find answers for Legs
-          if (ltotal - xtrial * l1 == ytrial * l2) {
+        // find divisors(y) for Legs
+        vector<int> divisors = divisorFinder(residual);
 
-            // Check if that  answer fits in the Arm case
-            if (xtrial * a1 + ytrial * a2 == atotal) {
-              if (answerExist) {
-                answerExist = false;
-                goto END; // early exit
-              }
-
-              x = xtrial, y = ytrial;
-              answerExist = true;
+        // Check if the answer is valid in Arms
+        for (const auto ytrial : divisors) {
+          if (a1 * xtrial + a2 * ytrial == atotal) {
+            if (answerExist) {
+              answerExist = false;
+              goto END; // early exit
             }
+            answerExist = true;
+            x = xtrial;
+            y = ytrial;
           }
         }
       }
@@ -50,6 +50,20 @@ public:
       else
         cout << "?\n";
     }
+  }
+
+  vector<int> divisorFinder(int target) {
+    vector<int> result = {};
+    for (int i = 1; i <= (int)sqrt(target); i++) {
+      if (target % i == 0) {
+        result.push_back(i);
+
+        if ((target / i) != i)
+          result.push_back(target / i);
+      }
+    }
+
+    return result;
   }
 };
 
