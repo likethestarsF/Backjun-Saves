@@ -1,4 +1,6 @@
-// date num #eg
+// 240000 1 #00
+// Random Marthon 8 E
+// 00:
 #include <algorithm>
 #include <iostream>
 #include <string>
