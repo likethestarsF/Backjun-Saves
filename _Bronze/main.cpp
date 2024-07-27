@@ -1,6 +1,6 @@
 // 240727 1 #13298
 // Random Marthon 8 E
-// 00:21
+// 00:
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -23,8 +23,8 @@ public:
       cin >> l1 >> a1 >> l2 >> a2 >> ltotal >> atotal;
 
       vector<pair<int, int>> possiblePairs = {}; // {x,y}
-      for (int xtrial = 0; xtrial * l1 <= ltotal; xtrial++) {
-        for (int ytrial = 0; ytrial * l2 <= ltotal - xtrial * l1; ytrial++) {
+      for (int xtrial = 1; xtrial * l1 <= ltotal; xtrial++) {
+        for (int ytrial = 1; ytrial * l2 <= ltotal - xtrial * l1; ytrial++) {
           if (ltotal - xtrial * l1 == ytrial * l2)
             possiblePairs.push_back({xtrial, ytrial});
         }
