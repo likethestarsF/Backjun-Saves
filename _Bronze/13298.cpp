@@ -1,6 +1,6 @@
 // 240727 1 #13298
 // Random Marthon 8 E
-// 00:
+// 00:50
 #include <algorithm>
 #include <iostream>
 #include <math.h>
@@ -25,18 +25,19 @@ public:
       bool answerExist = false;
       int x = -1, y = -1;
       for (int xtrial = 1; l1 * xtrial < ltotal; xtrial++) {
-        const int residual = ltotal - l1 * xtrial;
 
         // find divisors(y) for Legs
-        vector<int> divisors = divisorFinder(residual);
+        const int residual = ltotal - l1 * xtrial;
+        if (residual % l2 == 0) {
+          int ytrial = residual / l2;
 
-        // Check if the answer is valid in Arms
-        for (const auto ytrial : divisors) {
+          // Check if the answer is valid in Arms
           if (a1 * xtrial + a2 * ytrial == atotal) {
             if (answerExist) {
               answerExist = false;
               goto END; // early exit
             }
+
             answerExist = true;
             x = xtrial;
             y = ytrial;

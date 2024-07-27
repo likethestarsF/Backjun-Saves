@@ -1,6 +1,6 @@
 // 240727 1 #13298
 // Random Marthon 8 E
-// 00:
+// 00:50
 #include <algorithm>
 #include <iostream>
 #include <math.h>
