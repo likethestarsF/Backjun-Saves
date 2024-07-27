@@ -22,28 +22,30 @@ public:
 
       cin >> l1 >> a1 >> l2 >> a2 >> ltotal >> atotal;
 
-      vector<pair<int, int>> possiblePairs = {}; // {x,y}
+      bool answerExist = false;
+      int x = -1, y = -1;
       for (int xtrial = 1; xtrial * l1 <= ltotal; xtrial++) {
         for (int ytrial = 1; ytrial * l2 <= ltotal - xtrial * l1; ytrial++) {
-          if (ltotal - xtrial * l1 == ytrial * l2)
-            possiblePairs.push_back({xtrial, ytrial});
+
+          // find answers for Legs
+          if (ltotal - xtrial * l1 == ytrial * l2) {
+
+            // Check if that  answer fits in the Arm case
+            if (xtrial * a1 + ytrial * a2 == atotal) {
+              if (answerExist) {
+                answerExist = false;
+                goto END; // early exit
+              }
+
+              x = xtrial, y = ytrial;
+              answerExist = true;
+            }
+          }
         }
       }
 
-      int casesNum = 0;
-      int x = -1, y = -1;
-      while (!possiblePairs.empty()) {
-        pair<int, int> currentPair = possiblePairs.back();
-        possiblePairs.pop_back();
-
-        if (a1 * currentPair.first + a2 * currentPair.second == atotal) {
-          x = currentPair.first;
-          y = currentPair.second;
-          casesNum++;
-        }
-      }
-
-      if (casesNum == 1)
+    END:
+      if (answerExist)
         cout << x << " " << y << "\n";
       else
         cout << "?\n";
