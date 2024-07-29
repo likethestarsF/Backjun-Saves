@@ -1,6 +1,6 @@
 // 240729 1 #30804
 // Class 3
-// 00:
+// 01:50
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -28,6 +28,7 @@ public:
       if (i == true)
         cnt++;
     }
+
     if (cnt < 3) {
       cout << nMax;
       return;
@@ -39,33 +40,43 @@ public:
     int iStart = 0;
     int iEnd = iStart;
     int max = 0;
-    while (iEnd != nMax - 1) {
+
+    while (iStart != nMax - 1) {
       const int type1 = tanghuru[iStart];
       int type2 = type1;
+
+      bool isBreak = false;
       for (int index = iStart; index < nMax; index++) {
-        if (tanghuru[index] == type1)
-          continue;
-        if (tanghuru[index] == type2)
-          continue;
-
-        // update type2 only 1 time
-        if (type2 == type1) {
-          if (tanghuru[index] != type1)
+        if (tanghuru[index] != type1 && tanghuru[index] != type2) {
+          // update type2 only 1 time
+          if (type2 == type1) {
             type2 = tanghuru[index];
-        }
+          }
 
-        // save last fruit's index as iEnd
-        else {
-          iEnd = index - 1;
-          break;
+          else {
+            // save the index of last fruit
+            iEnd = index - 1;
+            isBreak = true;
+            break;
+          }
         }
-
-        if (index == nMax - 1)
-          iEnd = index;
       }
 
       // calc. the number of fruits and update max
-      max = (max > iEnd - iStart + 1) ? max : iEnd - iStart + 1;
+      if (!isBreak)
+        iEnd = nMax - 1;
+
+      // check if there are more the same type fruits in front of iStart.
+      int extra = 0;
+      for (int i = iStart - 1; i > 0; i--) {
+        if (tanghuru[i] == type1 || tanghuru[i] == type2)
+          extra++;
+        else
+          break;
+      }
+
+      max = (max > iEnd - iStart + 1 + extra) ? max : iEnd - iStart + 1 + extra;
+
       // update iStart.
       iStart = iEnd;
     }
