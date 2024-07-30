@@ -15,7 +15,7 @@ public:
 
   vector<char> pool = {};
 
-  void updateMax() {
+  void updateMax(vector<char> &pool) {
     string target = {};
     for (const auto &i : pool) {
       target += i;
@@ -25,6 +25,12 @@ public:
       return;
 
     min = (stoi(target) > stoi(min)) ? min : target;
+  }
+
+  template <typename T> void swap(T &a, T &b) {
+    T temp = a;
+    a = b;
+    b = temp;
   }
 
   void body() {
@@ -42,12 +48,13 @@ public:
       string temp = {};
       // move last to front
       for (int i = pool.size() - 1; i > 0; i--) {
-        // swap
-        char temp = pool[i];
-        pool[i] = pool[i - 1];
-        pool[i - 1] = temp;
+        swap(pool[i], pool[i - 1]);
 
-        updateMax();
+        for (int i = 0; i < pool.size(); i++) {
+          vector<char> tempPool = pool;
+          swap(tempPool[pool.size() - 1], tempPool[i]);
+          updateMax(tempPool);
+        }
       }
 
     } while (init != pool);
@@ -56,7 +63,7 @@ public:
     if (min == "1000000")
       cout << 0;
     else
-      cout << min;
+      cout << stoi(min);
   }
 };
 
