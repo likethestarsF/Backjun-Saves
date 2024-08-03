@@ -1,6 +1,6 @@
 // 240803 2 #15239
 // Random Marthon 9 C
-// 00:
+// 00:40
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -29,10 +29,7 @@ class my {
       else if (pw[i] >= 48 && pw[i] <= 57) // [0, 9]
         cases[2] = true;
 
-      else if (pw[i] >= 48 && pw[i] <= 57) // [0, 9]
-        cases[3] = true;
-
-      else if (symbols.find(pw[i]) != string::npos) // [0, 9]
+      else if (symbols.find(pw[i]) != string::npos) // symbols
         cases[3] = true;
     }
 
@@ -55,9 +52,9 @@ public:
 
       // # Output
       if (IsVaild(pw))
-        cout << "vaild" << '\n';
+        cout << "valid" << '\n';
       else
-        cout << "invaild" << '\n';
+        cout << "invalid" << '\n';
     }
   }
 };
