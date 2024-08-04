@@ -12,6 +12,7 @@ class my {
   int nodeN;
   vector<vector<bool>> graph;
   vector<int> answers;
+  vector<bool> isPushed;
 
   void RmConnections(int startIdx, int i) {
     graph[startIdx][i] = false;
@@ -33,11 +34,13 @@ public:
 
     // ## Process
     answers.resize(nodeN + 1, 0);
+    isPushed.resize(nodeN + 1, false);
     // init. the queue for BFS
     queue<int> q = {};
     int startIdx = 1;
 
     q.push(startIdx);
+    isPushed[startIdx] = true;
     while (!q.empty()) {
       // load the front
       startIdx = q.front();
@@ -48,7 +51,10 @@ public:
           answers[i] = startIdx;
           RmConnections(startIdx, i);
 
-          q.push(i);
+          if (!isPushed[i]) {
+            q.push(i);
+            isPushed[i] = true;
+          }
         }
       }
     }
