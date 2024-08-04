@@ -10,26 +10,27 @@ using namespace std;
 
 class my {
   int nodeN;
-  vector<vector<bool>> graph;
+  vector<vector<int>> graph;
   vector<int> answers;
   vector<bool> isPushed;
-
-  void RmConnections(int startIdx, int i) {
-    graph[startIdx][i] = false;
-    graph[i][startIdx] = false;
-  }
 
 public:
   void body() {
     cin >> nodeN; // [2, 100000]
 
+    // Prevent OoM by decreasing the size of graph.
+    // Make the list w/ the help of sort.
     // i = 0 is not used.
-    graph.resize(nodeN + 1, vector<bool>(nodeN + 1, false));
+    graph.resize(nodeN + 1);
     for (int i = 1; i < nodeN; i++) { // (N-1 times)
       int node1, node2;
       cin >> node1 >> node2; // [1, nodeN]
-      graph[node1][node2] = true;
-      graph[node2][node1] = true;
+
+      // graph[small node][kth] = big node
+      if (node1 < node2)
+        graph[node1].push_back(node2);
+      else
+        graph[node2].push_back(node1);
     }
 
     // ## Process
@@ -46,14 +47,31 @@ public:
       startIdx = q.front();
       q.pop();
 
-      for (int i = 1; i <= nodeN; i++) {
-        if (graph[startIdx][i]) {
-          answers[i] = startIdx;
-          RmConnections(startIdx, i);
+      // Find the connection ->
+      // Case 1. graph[startIdx][i] = child
+      for (int i = 0; i < graph[startIdx].size(); i++) {
+        answers[graph[startIdx][i]] = startIdx;
+        /// push the next
+        if (!isPushed[graph[startIdx][i]]) {
+          q.push(graph[startIdx][i]);
+          isPushed[graph[startIdx][i]] = true;
+        }
+      }
+      /// rm the connection
+      graph[startIdx].resize(0);
 
-          if (!isPushed[i]) {
-            q.push(i);
-            isPushed[i] = true;
+      // Case 2. graph[child][i] = startIdx, child is smaller than startIdx
+      for (int child = 0; child < startIdx; child++) {
+        for (int i = 0; i < graph[child].size(); i++) {
+          if (graph[child][i] == startIdx) {
+            answers[child] = startIdx;
+            /// rm the connection
+            graph[child][i] = 0; // erasing can cause problem due to for loop.
+            /// push the next
+            if (!isPushed[child]) {
+              q.push(child);
+              isPushed[child] = true;
+            }
           }
         }
       }
