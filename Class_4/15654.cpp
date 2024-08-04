@@ -10,27 +10,27 @@ class my {
   int N, M;
   vector<bool> isVisited;
   vector<int> seq = {};
+  vector<int> selected;
 
-  void backtracking(int depth, vector<int> list) {
+  void backtracking(int depth) {
     // end of backtracking
     if (depth == M) {
-      for (const int &i : list)
+      for (const int &i : selected)
         cout << i << ' ';
       cout << '\n';
 
     } else {
-      int start = 0;
+      const int start = 0;
 
       for (int i = start; i < N; i++) {
         if (!isVisited[i]) {
           // select the elem
-          list.push_back(seq[i]);
+          selected[depth] = seq[i];
           isVisited[i] = true;
 
-          backtracking(depth + 1, list);
+          backtracking(depth + 1);
 
           // deselece the elem
-          list.pop_back();
           isVisited[i] = false;
         }
       }
@@ -42,12 +42,13 @@ public:
     cin >> N >> M; // [1, 8]
 
     isVisited.resize(N, false);
+    selected.resize(M, 0);
     seq.resize(N);
     for (int i = 0; i < N; i++)
       cin >> seq[i]; // [1,10000]
     sort(seq.begin(), seq.end());
 
-    backtracking(0, {});
+    backtracking(0);
   }
 };
 int main() {
