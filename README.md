@@ -4,6 +4,13 @@
 
 Useful site : https://modoocode.com/
 
+Git : cancel the last Commit
+```
+git reset --soft HEAD~1
+
+```
+
+
 ## Override operators in struct.
 
 can be used in sorting.
