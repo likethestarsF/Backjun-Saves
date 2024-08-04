@@ -1,6 +1,6 @@
 // 240804 3 #15652
 // Class 4
-// 00:
+// 00:15
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -17,7 +17,11 @@ class my {
       cout << '\n';
 
     } else {
-      for (int i = 1; i <= N; i++) {
+      int start = 1;
+      if (!list.empty())
+        start = list.back();
+
+      for (int i = start; i <= N; i++) {
         // select the elem
         list.push_back(i);
         backtracking(depth + 1, list);
