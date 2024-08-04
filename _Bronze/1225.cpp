@@ -1,6 +1,6 @@
 // 240804 1 #1225
 // Random Marthon 9 B
-// 00:
+// 00:10
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -11,17 +11,17 @@ class my {
 
 public:
   void body() {
-    cin >> A >> B;
+    cin >> A >> B; // [0, 10^10000)
 
-    int aSum = 0, bSum = 0;
+    long long aSum = 0, bSum = 0;
     for (int i_A = 0; i_A < A.length(); i_A++) {
-      aSum += A[i_A] - '0';
+      aSum += A[i_A] - '0'; // [, 90000]
     }
     for (int i_B = 0; i_B < B.length(); i_B++) {
       bSum += B[i_B] - '0';
     }
 
-    cout << aSum * bSum;
+    cout << (long long)(aSum * bSum); // [, 90000^2]
   }
 };
 int main() {
