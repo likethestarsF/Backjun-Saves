@@ -1,6 +1,6 @@
 // 240804 5 #11053
 // Class 4
-// 00:
+// 02:30
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -11,7 +11,13 @@ class my {
   int lenOfSeq;
   vector<int> seq;
   vector<int> DP;
-  vector<int> DP_big;
+
+  int max(const vector<int> &arr) {
+    int result = 0;
+    for (const auto &i : arr)
+      result = std::max(result, i);
+    return result;
+  }
 
 public:
   void body() {
@@ -19,8 +25,6 @@ public:
     cin >> lenOfSeq; // [1, 1000]
     seq.resize(lenOfSeq);
     DP.resize(lenOfSeq);
-    DP_big.resize(lenOfSeq);
-
     for (int i = 0; i < lenOfSeq; i++)
       cin >> seq[i]; // [1, 1000]
 
@@ -33,31 +37,24 @@ public:
     // else if (seq[i] > the biggest value of DP[i-2]) DP[i] = DP[i-2] + 1;
     // and so on.
 
-    // init the first value.
+    // ## 2nd Trial
+    // DP[i] must contain ith elem. So, DP_big isn't needed.
+    // So, The max is not the last. It is one of the DP[i].
+
+    // init the first value
     DP[0] = 1;
-    DP_big[0] = seq[0];
-
     for (int i = 1; i < lenOfSeq; i++) {
-      // init the default value
-      DP[i] = 1, DP_big[i] = seq[i];
+      // init a default
+      DP[i] = 1;
 
-      // Compare with the previous DPs
+      // Compare with the entire previous DPs
       for (int j = i - 1; j >= 0; j--) {
-        if (seq[i] > DP_big[j]) {
-          DP[i] = DP[j] + 1;
-          break;
-        }
-      }
-
-      // Select the maximum
-      if (DP[i] == DP[i - 1])
-        DP_big[i] = min(DP_big[i], DP_big[i - 1]);
-      else if (DP[i] < DP[i - 1]) {
-        DP[i] = DP[i - 1];
-        DP_big[i] = DP_big[i - 1];
+        if (seq[i] > seq[j])
+          DP[i] = std::max(DP[i], DP[j] + 1);
       }
     }
-    cout << DP.back();
+    // Select the maximum
+    cout << my::max(DP);
   }
 };
 
