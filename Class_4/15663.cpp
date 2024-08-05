@@ -12,12 +12,16 @@ class my {
   vector<int> num;
 
   vector<int> answer;
+  vector<int> previous;
   void backtracking(int depth) {
     // Exit
-    if (depth == M) {
+    if (depth == M && previous != answer) {
+
       for (const int &elem : answer)
         cout << elem << ' ';
       cout << '\n';
+
+      previous = answer;
     }
 
     else {
@@ -42,7 +46,8 @@ public:
     sort(num.begin(), num.end());
 
     // sorted by inc. dictionary order
-    answer.resize(M);
+    answer.resize(M, 0);
+    previous.resize(M);
     backtracking(0);
   }
 };
