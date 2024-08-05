@@ -15,13 +15,15 @@ class my {
   vector<int> previous;
   void backtracking(int depth) {
     // Exit
-    if (depth == M && previous != answer) {
+    if (depth == M) {
+      if (previous != answer) {
 
-      for (const int &elem : answer)
-        cout << elem << ' ';
-      cout << '\n';
+        for (const int &elem : answer)
+          cout << elem << ' ';
+        cout << '\n';
 
-      previous = answer;
+        previous = answer;
+      }
     }
 
     else {
