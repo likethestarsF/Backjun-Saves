@@ -1,14 +1,25 @@
 # Notepad
 
+
+
+# Git Commands
+- Erase the last Commit
+
+`git reset --soft HEAD~1`
+
+- Change the message of the last Commit
+
+`git commit --amend`
+
+- Change more previous messages
+
+`git rebase -i HEAD~3`
+ 
 # Personal Notes.
 
 Useful site : https://modoocode.com/
 
-Git : cancel the last Commit
-```
-git reset --soft HEAD~1
 
-```
 
 
 ## Override operators in struct.
