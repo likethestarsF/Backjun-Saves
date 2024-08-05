@@ -13,27 +13,36 @@ class my {
 
   vector<int> answer;
   vector<int> previous;
+  vector<bool> isVisited;
   void backtracking(int depth) {
     // Exit
     if (depth == M) {
-      if (previous != answer) {
+      for (const int &elem : answer)
+        cout << elem << ' ';
+      cout << '\n';
 
-        for (const int &elem : answer)
-          cout << elem << ' ';
-        cout << '\n';
-
-        previous = answer;
-      }
+      previous = answer;
     }
 
     else {
       for (int i = 0; i < N; i++) {
-        // Select
-        answer[depth] = num[i];
+        /*
+         * Do not Select an indentical number value in the same depth
+         * Refresh the marker for the above when a depth is decreased
+         * and depth is decreased only when it reaches the end.
+         * this is implemented by previous[depth] != num[i] :
 
-        backtracking(depth + 1);
+         */
+        if (!isVisited[i] && previous[depth] != num[i]) {
+          // Select
+          answer[depth] = num[i];
+          isVisited[i] = true;
 
-        // Deselect
+          backtracking(depth + 1);
+
+          // Deselect
+          isVisited[i] = false;
+        }
       }
     }
   }
@@ -50,6 +59,7 @@ public:
     // sorted by inc. dictionary order
     answer.resize(M, 0);
     previous.resize(M);
+    isVisited.resize(M, false);
     backtracking(0);
   }
 };
