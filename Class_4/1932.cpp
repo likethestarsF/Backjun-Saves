@@ -52,14 +52,16 @@ public:
   void body() {
     cin >> sizeOfTriangle; // [1, 500]
     DP.resize(sizeOfTriangle);
-    triangle.resize(sizeOfTriangle);
+    triangle.resize(sizeOfTriangle, vector<int>(0));
 
     // only triangle[i][smaller or equal to i] are available data.
     for (int i = 0; i < sizeOfTriangle; i++) {
       DP[i].resize(i, -1);
-      triangle[i].resize(i);
-      for (int j = 0; j < i + 1; j++)
-        cin >> triangle[i][j]; // [0, 9999]
+      for (int j = 0; j < i + 1; j++) {
+        int temp;
+        cin >> temp; // [0, 9999]
+        triangle[i].push_back(temp);
+      }
     }
 
     // DP
@@ -67,10 +69,10 @@ public:
     // We need to use top - down style. because bottom-up costs too much time.
 
     int maxValue = 0;
-    for (int i = 0; i < sizeOfTriangle; i++) {
-      DP[sizeOfTriangle][i] = DP_helper(sizeOfTriangle, i);
-      maxValue = max(maxValue, DP[sizeOfTriangle][i]);
-    }
+    // for (int i = 0; i < sizeOfTriangle; i++) {
+    //   DP[sizeOfTriangle][i] = DP_helper(sizeOfTriangle, i);
+    //   maxValue = max(maxValue, DP[sizeOfTriangle][i]);
+    // }
 
     cout << maxValue;
   }
