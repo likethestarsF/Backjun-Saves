@@ -6,15 +6,15 @@
 #include <queue>
 #include <string>
 #include <vector>
-#define ll long
+#define ll long long
 using namespace std;
 
 class my {
   ll int A, B;
 
-  ll int Calculation(ll int input, const bool type) {
+  ll int Calculation(ll int input, const int type) {
     // Multiply 2 of A
-    if (type == false)
+    if (type == 0)
       return (input * 2);
 
     else {
