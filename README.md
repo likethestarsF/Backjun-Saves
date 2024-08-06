@@ -14,6 +14,8 @@
 - Change more previous messages
 
 `git rebase -i HEAD~3`
+
+Select a specific commit which I want to rewrite by editing `pick` into `reword`
  
 # Personal Notes.
 
