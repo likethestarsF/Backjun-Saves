@@ -1,5 +1,5 @@
 // 240000 1 #00
-// Random Marthon 8 E
+// Class X
 // 00:
 #include <algorithm>
 #include <iostream>
@@ -10,7 +10,10 @@ using namespace std;
 class my {
 
 public:
+  void body() {
 
+    
+  }
 };
 
 int main() {
@@ -23,4 +26,5 @@ int main() {
   // std::clog.setstate(std::ios_base::failbit);
 
   my a;
+  a.body();
 }
