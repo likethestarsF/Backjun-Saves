@@ -1,12 +1,12 @@
 // 240806 3 #16953
 // Class 4
-// 00:
+// 00:20
 #include <algorithm>
 #include <iostream>
 #include <queue>
 #include <string>
 #include <vector>
-#define ll long long
+#define ll long
 using namespace std;
 
 class my {
@@ -20,7 +20,7 @@ class my {
     else {
       string result = to_string(input);
       result = result + '1';
-      return stoi(result);
+      return stoll(result);
     }
   }
 
@@ -30,8 +30,9 @@ public:
 
     // ### BFS ###
     // initializing
-    queue<ll int> q_next = {};
     queue<ll int> q = {};
+    queue<ll int> q_next = {};
+    queue<ll int> q_empty = {};
     q.push(A);
 
     int cnt = 0 + 1; // the answer should be min + 1, so add 1.
@@ -53,7 +54,7 @@ public:
           // a Case which an adjusted A cannot reach the B.
           // a value bigger than B cannot become B by any operation.
           else if (Calculation(current, i) > B) {
-            continue;
+            break;
           }
         }
       }
@@ -61,7 +62,7 @@ public:
       // Storing cnt in the queue requires lots of memory.
       // so, use 2 queues for save cnt.
       q = q_next;
-      q_next = {};
+      q_next = q_empty;
       cnt++;
     }
 
