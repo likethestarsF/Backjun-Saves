@@ -1,6 +1,7 @@
-// 240805 1 #15663
+// 240805 0 #15663
+// 240806 1 #15663
 // Class 4
-// 00:
+// 02:20
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -11,6 +12,12 @@ class my {
   int N, M;
   vector<int> num;
 
+  void UpdatePrevious(int depth) {
+    previous[depth] = answer[depth];
+    for (int i = depth + 1; i < M; i++)
+      previous[i] = 0;
+  }
+
   vector<int> answer;
   vector<int> previous;
   vector<bool> isVisited;
@@ -20,28 +27,30 @@ class my {
       for (const int &elem : answer)
         cout << elem << ' ';
       cout << '\n';
-
-      previous = answer;
     }
 
     else {
       for (int i = 0; i < N; i++) {
         /*
-         * Do not Select an indentical number value in the same depth
-         * Refresh the marker for the above when a depth is decreased
-         * and depth is decreased only when it reaches the end.
-         * this is implemented by previous[depth] != num[i] :
-
+         * Do not Select an identical to previous number in the same depth
+         * refresh the previous whenever a new num. is selected:
+         * targets are [depth] itself and every previous[i]; i is bigger than
+         * the depth. this is implemented by UpdatePrevious[depth]
+         * By only comparing num[i] with previous[depth], we can avoid the
+         * duplicated selction.
          */
-        if (!isVisited[i] && previous[depth] != num[i]) {
-          // Select
-          answer[depth] = num[i];
-          isVisited[i] = true;
+        if (!isVisited[i]) {
+          if (num[i] != previous[depth]) {
+            // Select
+            answer[depth] = num[i];
+            isVisited[i] = true;
+            UpdatePrevious(depth);
 
-          backtracking(depth + 1);
+            backtracking(depth + 1);
 
-          // Deselect
-          isVisited[i] = false;
+            // Deselect
+            isVisited[i] = false;
+          }
         }
       }
     }
