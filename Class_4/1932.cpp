@@ -51,17 +51,15 @@ class my {
 public:
   void body() {
     cin >> sizeOfTriangle; // [1, 500]
-    DP.resize(sizeOfTriangle);
+    DP.resize(sizeOfTriangle, vector<int>(0));
     triangle.resize(sizeOfTriangle, vector<int>(0));
 
     // only triangle[i][smaller or equal to i] are available data.
     for (int i = 0; i < sizeOfTriangle; i++) {
-      DP[i].resize(i, -1);
-      for (int j = 0; j < i + 1; j++) {
-        int temp;
-        cin >> temp; // [0, 9999]
-        triangle[i].push_back(temp);
-      }
+      DP[i].resize(i + 1, -1);
+      triangle[i].resize(i + 1);
+      for (int j = 0; j < i + 1; j++)
+        cin >> triangle[i][j]; // [0, 9999]
     }
 
     // DP
@@ -71,7 +69,7 @@ public:
     int maxValue = 0;
     // for (int i = 0; i < sizeOfTriangle; i++) {
     //   DP[sizeOfTriangle][i] = DP_helper(sizeOfTriangle, i);
-    //   maxValue = max(maxValue, DP[sizeOfTriangle][i]);
+    //   // maxValue = max(maxValue, DP[sizeOfTriangle][i]);
     // }
 
     cout << maxValue;
