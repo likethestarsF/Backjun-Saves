@@ -1,6 +1,6 @@
 // 240806 5 #1629
 // Class 4
-// 00:
+// 01:00
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -33,13 +33,13 @@ public:
     }
 
     // Store A^1, A^2, A^4 ... mod C
-    vector<ll> A_mod_C(31, 0);
+    vector<long long int> A_mod_C(31, 0);
     A_mod_C[0] = A % C;
     for (int i = 1; i < 31; i++)
       A_mod_C[i] = ((A_mod_C[i - 1] % C) * (A_mod_C[i - 1] % C)) % C;
 
     // Find the answer
-    ll answer = 1;
+    long long int answer = 1;
     for (int i = 0; i < 31; i++) {
       if (B_binary[i] == true) {
         answer *= A_mod_C[i];
@@ -47,7 +47,7 @@ public:
       }
     }
 
-    cout << answer;
+    cout << answer % C;
   }
 };
 
