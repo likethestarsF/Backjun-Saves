@@ -1,6 +1,6 @@
 // 240806 4 #1149
 // Class 4
-// 00:
+// 01:00
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -15,7 +15,7 @@ class my {
   int CheapestResult(int i) { return min(DP[i][0], min(DP[i][1], DP[i][2])); }
 
   int MinOfPrevious(int index, int color) {
-    int result = 1001;
+    int result = 1000 * 1000;
     for (int j = 0; j < 3; j++) {
       if (j != color)
         result = min(result, DP[index][j]);
