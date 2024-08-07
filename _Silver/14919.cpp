@@ -7,61 +7,52 @@
 using namespace std;
 
 class my {
-  int m, numbersSize;
-  vector<float> numbers = {};
+  int m;
   vector<int> numbersCnt;
 
 public:
   void body() {
     // Input
     cin >> m; // [1, 1000]
+    numbersCnt.resize(m, 0);
 
+    string number_str;
+    int number;
     while (!cin.eof()) {
-      float number;
-      cin >> number; // [0, 1)
+      cin >> number_str;
+      string num_str_converted = {};
 
-      // if (number < 0)
-      // goto EXIT;
-      numbers.push_back((number + 0.0000001));
+      // if (number_str == "x")
+      //   goto EXIT;
+
+      // general cases
+      if (number_str.find('.') != string::npos) {
+        for (int i = 2; i < number_str.length(); i++) {
+          num_str_converted += number_str[i]; // max_length = 6
+        }
+
+        // make length as 6
+        while (num_str_converted.length() < 6)
+          num_str_converted += '0';
+
+        number = stoi(num_str_converted); // [1, 999999]
+      }
+      // input is 0
+      else
+        number = 0;
+
+      // Find the where a number belongs
+      // : number/1000000 < i / M <-> number * M < i * 1000000
+      for (int i = 0; i < m; i++) {
+        if (number * m < (i + 1) * 1000000) {
+          numbersCnt[i]++;
+          break;
+        }
+      }
     }
     // EXIT:
 
-    numbersSize = numbers.size(); // [1, 1000000]
-    sort(numbers.begin(), numbers.end());
-
-    numbersCnt.resize(m, 0);
-
-    // Process
-    float bd_low = 0;
-    float bd_basic = ((float)1 / m);
-    float bd_high = bd_basic;
-
-    int idxForCnt = 0;
-    for (int i = 0; i < numbersSize; i++) {
-      clog << "current : " << numbers[i] << ' ' << bd_low << "bd low and high"
-           << bd_high << endl;
-
-      if (numbers[i] >= bd_low && numbers[i] < bd_high) {
-        clog << "added at " << idxForCnt << endl;
-        numbersCnt[idxForCnt]++;
-      }
-
-      else {
-        // update the boundaries
-        idxForCnt++;
-        bd_low = bd_high;
-        bd_high = (1 + idxForCnt) * bd_basic;
-
-        // re-check the ith elem again.
-        i--;
-
-        if (idxForCnt == m)
-          break;
-      }
-    }
-
     // Output
-    // clog << bd_basic << endl;
     for (int i = 0; i < m; i++)
       cout << numbersCnt[i] << ' ';
   }
