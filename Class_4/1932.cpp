@@ -1,6 +1,6 @@
 // 240806 6 #1932
 // Class 4
-// 00:
+// 01:00
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -22,7 +22,7 @@ class my {
       return DP[floor][index];
     }
 
-    else if (index == 0) {
+    if (index == 0) {
       DP[floor][index] = triangle[floor][index] + DP_helper(floor - 1, 0);
       return DP[floor][index];
     }
@@ -36,11 +36,11 @@ class my {
     // General cases
     // Find DP[floor-1][index]
     if (DP[floor - 1][index] == -1)
-      DP[floor - 1][index] = DP_helper(floor, index);
+      DP[floor - 1][index] = DP_helper(floor - 1, index);
 
     // Find DP[floor-1][index-1]
     if (DP[floor - 1][index - 1] == -1)
-      DP[floor - 1][index - 1] = DP_helper(floor, index - 1);
+      DP[floor - 1][index - 1] = DP_helper(floor - 1, index - 1);
 
     DP[floor][index] = triangle[floor][index] +
                        max(DP[floor - 1][index], DP[floor - 1][index - 1]);
@@ -67,10 +67,10 @@ public:
     // We need to use top - down style. because bottom-up costs too much time.
 
     int maxValue = 0;
-    // for (int i = 0; i < sizeOfTriangle; i++) {
-    //   DP[sizeOfTriangle][i] = DP_helper(sizeOfTriangle, i);
-    //   // maxValue = max(maxValue, DP[sizeOfTriangle][i]);
-    // }
+    for (int i = 0; i < sizeOfTriangle; i++) {
+      DP[sizeOfTriangle - 1][i] = DP_helper(sizeOfTriangle - 1, i);
+      maxValue = max(maxValue, DP[sizeOfTriangle - 1][i]);
+    }
 
     cout << maxValue;
   }
