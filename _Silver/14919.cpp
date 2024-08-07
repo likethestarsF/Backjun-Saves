@@ -8,44 +8,62 @@ using namespace std;
 
 class my {
   int m, numbersSize;
-  vector<float> numbers;
+  vector<float> numbers = {};
   vector<int> numbersCnt;
 
 public:
   void body() {
     // Input
-    cin >> m;           // [1, 1000]
-    cin >> numbersSize; // [1, 1000000]
-    numbers.resize(numbersSize);
-    numbersCnt.resize(numbersSize, 0);
-    for (int i = 0; i < numbersSize; i++)
-      cin >> numbers[i];
+    cin >> m; // [1, 1000]
+
+    while (!cin.eof()) {
+      float number;
+      cin >> number; // [0, 1)
+
+      // if (number < 0)
+      //   goto EXIT;
+      numbers.push_back(number);
+    }
+    // EXIT:
+
+    numbersSize = numbers.size(); // [1, 1000000]
     sort(numbers.begin(), numbers.end());
+
+    numbersCnt.resize(m, 0);
 
     // Process
     float bd_low = 0;
-    float bd_basic = 1 / m;
+    float bd_basic = (float)1 / m;
     float bd_high = bd_basic;
+
+    int idxForCnt = 0;
     for (int i = 0; i < numbersSize; i++) {
-      if (numbers[i] >= bd_low && numbers[i] < bd_high)
-        numbersCnt[i]++;
+      clog << "current : " << numbers[i] << ' ' << bd_low << "bd low and high"
+           << bd_high << endl;
+
+      if (numbers[i] >= bd_low && numbers[i] < bd_high) {
+        clog << "added at " << idxForCnt << endl;
+        numbersCnt[idxForCnt]++;
+      }
+
       else {
         // update the boundaries
+        idxForCnt++;
         bd_low = bd_high;
-        bd_high += bd_basic;
+        bd_high = (1 + idxForCnt) * bd_basic;
 
         // re-check the ith elem again.
         i--;
 
-        if (bd_low >= 1)
-          break; // avoid an infinite loop because of i--;
+        if (idxForCnt == m)
+          break;
       }
     }
 
     // Output
-    cout << numbersCnt.size();
-    for (const int &elem : numbersCnt)
-      cout << elem << ' ';
+    // clog << bd_basic << endl;
+    for (int i = 0; i < m; i++)
+      cout << numbersCnt[i] << ' ';
   }
 };
 
@@ -56,7 +74,7 @@ int main() {
   cout.tie(NULL);
 
   /* clog switch */
-  // std::clog.setstate(std::ios_base::failbit);
+  std::clog.setstate(std::ios_base::failbit);
 
   my a;
   a.body();
