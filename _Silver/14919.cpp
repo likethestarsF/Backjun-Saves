@@ -14,16 +14,21 @@ public:
   void body() {
     // Input
     cin >> m; // [1, 1000]
-    numbersCnt.resize(m, 0);
+    numbersCnt.resize(1000, 0);
 
     string number_str;
     int number;
-    while (!cin.eof()) {
+    while (true) {
       cin >> number_str;
+
+      // eof checker should be placed right behind of the cin.
+      if (cin.eof())
+        break; // break;
       string num_str_converted = {};
 
+      // manual exit for debug
       // if (number_str == "x")
-      //   goto EXIT;
+      // goto EXIT;
 
       // general cases
       if (number_str.find('.') != string::npos) {
@@ -44,7 +49,7 @@ public:
       // Find the where a number belongs
       // : number/1000000 < i / M <-> number * M < i * 1000000
       for (int i = 0; i < m; i++) {
-        if (number * m < (i + 1) * 1000000) {
+        if ((long long)(number * m) < (long long)((i + 1) * 1000000)) {
           numbersCnt[i]++;
           break;
         }
