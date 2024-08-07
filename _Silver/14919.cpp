@@ -4,11 +4,12 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#define MAX 10000000
 using namespace std;
 
 class my {
   int m, numbersSize;
-  vector<float> numbers = {};
+  vector<int> numbers = {};
   vector<int> numbersCnt;
 
 public:
@@ -21,8 +22,8 @@ public:
       cin >> number; // [0, 1)
 
       // if (number < 0)
-      //   goto EXIT;
-      numbers.push_back(number);
+      // goto EXIT;
+      numbers.push_back((number + 0.0000001) * MAX);
     }
     // EXIT:
 
@@ -33,7 +34,7 @@ public:
 
     // Process
     float bd_low = 0;
-    float bd_basic = (float)1 / m;
+    float bd_basic = MAX * ((float)1 / m);
     float bd_high = bd_basic;
 
     int idxForCnt = 0;
