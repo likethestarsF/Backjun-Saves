@@ -1,6 +1,6 @@
 // 240808 2 #12005
 // Random Marathon 10 F
-// 00:00
+// 00:15
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -9,29 +9,28 @@ using namespace std;
 class my {
   int diaNum, sizeDiff;
   vector<int> dia;
-  vector<int> ifDiff;
 
 public:
   void body() {
     cin >> diaNum >> sizeDiff; // [, 1000] , [0, 10000]
-    dia.resize(sizeDiff);
+    dia.resize(diaNum);
     for (int i = 0; i < diaNum; i++)
       cin >> dia[i];
-
-    ifDiff.resize(1, -1);
-    for (int i = 0; i < diaNum; i++) {
-      if (i == diaNum - 1) {
-        ifDiff.push_back(i);
-        break;
-      }
-
-      if (abs(dia[i + 1] - dia[i]) > sizeDiff)
-        ifDiff.push_back(i);
-    }
+    sort(dia.begin(), dia.end());
 
     int max = 1;
-    for (int i = 1; i < ifDiff.size(); i++)
-      max = std::max(max, ifDiff[i] - ifDiff[i - 1]);
+    // Consider cur is the min_size of dia
+    for (int cur = 0; cur < diaNum; cur++) {
+      int cnt = 0;
+      for (int i = cur; i < diaNum; i++) {
+        if (abs(dia[cur] - dia[i]) <= sizeDiff)
+          cnt++;
+        else
+          break;
+      }
+
+      max = std::max(max, cnt);
+    }
     cout << max;
   }
 };
