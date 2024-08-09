@@ -1,6 +1,6 @@
 // 240809 2 #4118
 // Random Marathon 10 C
-// 00:00
+// 00:15
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -11,8 +11,6 @@ class my {
   vector<bool> isBought;
 
   bool IsAllPurchased() {
-    isBought.resize(50, false); // [0] isn't used
-
     // input Lotto numbers
     for (int i = 0; i < ticketSize; i++) {
       for (int j = 0; j < 6; j++) {
@@ -34,9 +32,11 @@ public:
   void body() {
     while (true) {
       cin >> ticketSize; // [1, 100]
+
       if (ticketSize == 0)
         return;
 
+      isBought = vector<bool>(50, false); // [0] isn't used
       if (IsAllPurchased())
         cout << "Yes\n";
       else
