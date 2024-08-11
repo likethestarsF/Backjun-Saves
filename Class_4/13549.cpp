@@ -1,6 +1,6 @@
 // 240811 6 #13549
 // Class 4
-// 00:
+// 00:40
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -69,7 +69,10 @@ public:
   void body() {
     cin >> start >> target; // [1, 100000]
 
-    cout << BFS();
+    if (start == target)
+      cout << 0;
+    else
+      cout << BFS();
   }
 };
 
