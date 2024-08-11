@@ -12,8 +12,8 @@ class my {
 
   int BFS() {
     int time = 0;
+    bool isEnd = false;
 
-    const int delta = abs(target - start);
     vector<bool> isVisited(100001, false);
     queue<int> q = {};
     queue<int> q_next = {};
@@ -31,16 +31,13 @@ class my {
         if (cur * 2 == target)
           return time;
         else if (cur + 1 == target || cur - 1 == target)
-          return (time + 1);
+          isEnd = true; // return time + 1
 
-        // Push nexts
+        // Push nexts COND: boundary
         //  0. *2, time : + 0
-        //   COND: boundary && delta
-        if (cur * 2 < 100001 && cur * 2 - delta < target) {
-          if (!isVisited[cur * 2]) {
-            q.push(cur * 2);
-            isVisited[cur * 2];
-          }
+        if (cur * 2 < 100001 && !isVisited[cur * 2] && cur <= target) {
+          q.push(cur * 2);
+          isVisited[cur * 2];
         }
 
         //  1. +1, time : + 1
@@ -55,6 +52,9 @@ class my {
           isVisited[cur - 1];
         }
       }
+
+      if (isEnd)
+        return time + 1;
 
       // Update q by q_next
       q = q_next;
