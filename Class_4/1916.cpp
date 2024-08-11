@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
-#define INF 1000000000
+#define INF 2000000000
 using namespace std;
 
 class my {
@@ -56,8 +56,9 @@ public:
     graph.resize(cityN, vector<int>(cityN, INF));
     for (int i = 0; i < busN; i++) {
       int start, end, cost;
-      cin >> start >> end >> cost;      // cost=[0, 100000]
-      graph[start - 1][end - 1] = cost; // to use [0]
+      cin >> start >> end >> cost; // cost=[0, 100000]
+      graph[start - 1][end - 1] =
+          min(graph[start - 1][end - 1], cost); // to use [0]
     }
 
     int a, b;
