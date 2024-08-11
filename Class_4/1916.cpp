@@ -1,6 +1,6 @@
 // 240811 2 #1916
 // Class 4
-// 00:
+// 01:00
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -16,6 +16,7 @@ class my {
     vector<bool> isVisited(cityN, false);
     int cur = start;
     cost[cur] = 0;
+    isVisited[cur] = true;
 
     // Exit when every nodes are visited
     while (true) {
@@ -31,18 +32,18 @@ class my {
       // update cur
       int minCost = INF;
       int next = -1;
-      for (int i = 0; i < graph[cur].size(); i++) {
-        if (graph[cur][i] == INF || isVisited[i])
+      for (int i = 0; i < cost.size(); i++) {
+        if (isVisited[i])
           continue; // disconntected and visited are ignored
 
-        if (graph[cur][i] <= minCost) {
+        if (cost[i] < minCost) {
           next = i;
-          minCost = graph[cur][i];
+          minCost = cost[i];
         }
       }
 
       if (next == -1)
-        break; // Exit of While
+        break;
       else
         cur = next;
     }
