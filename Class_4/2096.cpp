@@ -1,6 +1,6 @@
 // 240811 3 #2096
 // Class 4
-// 00:
+// 00:50
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -33,7 +33,7 @@ public:
       // Min
       {
         int left = minDP[0] + l;
-        int mid = min(minDP[0], minDP[0]) + m;
+        int mid = min(minDP[0], minDP[1]) + m;
         int right = minDP[1] + r;
         minDP[0] = min(left, mid);
         minDP[1] = min(right, mid);
@@ -42,7 +42,7 @@ public:
       // Max
       {
         int left = maxDP[0] + l;
-        int mid = max(maxDP[0], maxDP[0]) + m;
+        int mid = max(maxDP[0], maxDP[1]) + m;
         int right = maxDP[1] + r;
         maxDP[0] = max(left, mid);
         maxDP[1] = max(right, mid);
