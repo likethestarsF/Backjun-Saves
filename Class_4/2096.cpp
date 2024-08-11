@@ -12,44 +12,48 @@ class my {
 
   int FindMax() {
     vector<vector<int>> DP;
-    DP.resize(N, vector<int>(3, 0));
+    DP.resize(1, vector<int>(2, 0));
 
-    for (int j = 0; j < 3; j++)
-      DP[0][j] = line[0][j];
+    DP[0][0] = max(line[0][0], line[0][1]); // left
+    DP[0][1] = max(line[0][2], line[0][1]); // right
 
     for (int i = 1; i < N; i++) {
-      DP[i][0] = max(DP[i - 1][0], DP[i - 1][1]) + line[i][0];
-      DP[i][1] =
-          max(max(DP[i - 1][0], DP[i - 1][1]), DP[i - 1][2]) + line[i][1];
-      DP[i][2] = max(DP[i - 1][1], DP[i - 1][2]) + line[i][2];
+      int left = DP[0][0] + line[i][0];
+      int mid = max(DP[0][0], DP[0][1]) + line[i][1];
+      int right = DP[0][1] + line[i][2];
+
+      DP[0][0] = max(left, mid);
+      DP[0][1] = max(right, mid);
     }
 
-    return max(max(DP[N - 1][0], DP[N - 1][1]), DP[N - 1][2]);
+    return max(DP[0][0], DP[0][1]);
   }
 
   int FindMin() {
     vector<vector<int>> DP;
-    DP.resize(N, vector<int>(3, 0));
+    DP.resize(1, vector<int>(2, 0));
 
-    for (int j = 0; j < 3; j++)
-      DP[0][j] = line[0][j];
+    DP[0][0] = min(line[0][0], line[0][1]); // left
+    DP[0][1] = min(line[0][2], line[0][1]); // right
 
     for (int i = 1; i < N; i++) {
-      DP[i][0] = min(DP[i - 1][0], DP[i - 1][1]) + line[i][0];
-      DP[i][1] =
-          min(min(DP[i - 1][0], DP[i - 1][1]), DP[i - 1][2]) + line[i][1];
-      DP[i][2] = min(DP[i - 1][1], DP[i - 1][2]) + line[i][2];
+      int left = DP[0][0] + line[i][0];
+      int mid = min(DP[0][0], DP[0][1]) + line[i][1];
+      int right = DP[0][1] + line[i][2];
+
+      DP[0][0] = min(left, mid);
+      DP[0][1] = min(right, mid);
     }
 
-    return min(min(DP[N - 1][0], DP[N - 1][1]), DP[N - 1][2]);
+    return min(DP[0][0], DP[0][1]);
   }
 
 public:
   void body() {
-    cin >> N;
+    cin >> N; // [1, 100,000]
     line.resize(N, vector<int>(3));
     for (int i = 0; i < N; i++)
-      cin >> line[i][0] >> line[i][1] >> line[i][2];
+      cin >> line[i][0] >> line[i][1] >> line[i][2]; // [0,9]
 
     cout << FindMax() << ' ' << FindMin();
   }
