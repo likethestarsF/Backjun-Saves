@@ -7,55 +7,49 @@
 
 using namespace std;
 class my {
-  int N;
-  vector<vector<int>> line;
-
-  int FindMax() {
-    vector<vector<int>> DP;
-    DP.resize(1, vector<int>(2, 0));
-
-    DP[0][0] = max(line[0][0], line[0][1]); // left
-    DP[0][1] = max(line[0][2], line[0][1]); // right
-
-    for (int i = 1; i < N; i++) {
-      int left = DP[0][0] + line[i][0];
-      int mid = max(DP[0][0], DP[0][1]) + line[i][1];
-      int right = DP[0][1] + line[i][2];
-
-      DP[0][0] = max(left, mid);
-      DP[0][1] = max(right, mid);
-    }
-
-    return max(DP[0][0], DP[0][1]);
-  }
-
-  int FindMin() {
-    vector<vector<int>> DP;
-    DP.resize(1, vector<int>(2, 0));
-
-    DP[0][0] = min(line[0][0], line[0][1]); // left
-    DP[0][1] = min(line[0][2], line[0][1]); // right
-
-    for (int i = 1; i < N; i++) {
-      int left = DP[0][0] + line[i][0];
-      int mid = min(DP[0][0], DP[0][1]) + line[i][1];
-      int right = DP[0][1] + line[i][2];
-
-      DP[0][0] = min(left, mid);
-      DP[0][1] = min(right, mid);
-    }
-
-    return min(DP[0][0], DP[0][1]);
-  }
+  vector<int> minDP, maxDP;
 
 public:
   void body() {
+    int N;
     cin >> N; // [1, 100,000]
-    line.resize(N, vector<int>(3));
-    for (int i = 0; i < N; i++)
-      cin >> line[i][0] >> line[i][1] >> line[i][2]; // [0,9]
 
-    cout << FindMax() << ' ' << FindMin();
+    // init. DPs
+    minDP.resize(2, 0);
+    maxDP.resize(2, 0); // <= 100000 * 9
+    {
+      int l, m, r;
+      cin >> l >> m >> r;
+      maxDP[0] = max(l, m);
+      maxDP[1] = max(r, m);
+      minDP[0] = min(l, m);
+      minDP[1] = min(r, m);
+    }
+
+    for (int i = 1; i < N; i++) {
+      int l, m, r;
+      cin >> l >> m >> r; // [0,9]
+
+      // Min
+      {
+        int left = minDP[0] + l;
+        int mid = min(minDP[0], minDP[0]) + m;
+        int right = minDP[1] + r;
+        minDP[0] = min(left, mid);
+        minDP[1] = min(right, mid);
+      }
+
+      // Max
+      {
+        int left = maxDP[0] + l;
+        int mid = max(maxDP[0], maxDP[0]) + m;
+        int right = maxDP[1] + r;
+        maxDP[0] = max(left, mid);
+        maxDP[1] = max(right, mid);
+      }
+    }
+
+    cout << max(maxDP[0], maxDP[1]) << ' ' << min(minDP[0], minDP[1]);
   }
 };
 
