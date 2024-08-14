@@ -75,13 +75,18 @@ public:
 
     int ans = 0;
     Dijkstra(0);
+    if (dist[target[0]] == INF || dist[target[1]] == INF ||
+        dist[vertexN - 1] == INF) {
+      cout << -1;
+      return;
+    }
+
     if (dist[target[0]] > dist[target[1]]) {
       ans += dist[target[1]];
       Dijkstra(target[1]);
       ans += dist[target[0]];
       Dijkstra(target[0]);
     } else {
-      cout << "False" << endl;
       ans += dist[target[0]];
       Dijkstra(target[0]);
       ans += dist[target[1]];
