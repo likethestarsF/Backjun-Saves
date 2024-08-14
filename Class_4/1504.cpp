@@ -1,6 +1,6 @@
 // 240814 2 #1504
 // Class 4
-// 00:00
+// 01:20
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -73,27 +73,27 @@ public:
      * Select one of them by min (dist[target[0], + dist[target[1]])
      */
 
-    int ans = 0;
     Dijkstra(0);
+
+    // Not three vertices are fully connected
     if (dist[target[0]] == INF || dist[target[1]] == INF ||
         dist[vertexN - 1] == INF) {
       cout << -1;
       return;
     }
 
-    if (dist[target[0]] > dist[target[1]]) {
-      ans += dist[target[1]];
-      Dijkstra(target[1]);
-      ans += dist[target[0]];
-      Dijkstra(target[0]);
-    } else {
-      ans += dist[target[0]];
-      Dijkstra(target[0]);
-      ans += dist[target[1]];
-      Dijkstra(target[1]);
-    }
-    ans += dist[vertexN - 1];
-    cout << ans;
+    // 1st case. 1 -> tar1 -> tar2 -> vertexN-1
+    // 2nd case. 1 -> tar2 -> tar1 -> vertexN-1
+    int case1 = dist[target[0]], case2 = dist[target[1]];
+    Dijkstra(target[0]); // dist between tar1 and tar2 are the same.
+    case1 += dist[target[1]];
+    case2 += dist[target[1]];
+
+    case2 += dist[vertexN - 1];
+    Dijkstra(target[1]);
+    case1 += dist[vertexN - 1];
+
+    cout << min(case1, case2);
   }
 };
 
