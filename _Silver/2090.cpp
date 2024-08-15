@@ -1,20 +1,21 @@
-// 240815 1 #20909
+// 240815 1 #2090
 // Random Marathon 11 F
-// 00:00
+// 00:30
 #include <algorithm>
 #include <iostream>
 #include <queue>
 #include <vector>
 using namespace std;
+#define ll long long
 
 class my {
-  int n;
-  vector<int> num;
+  ll int n;
+  vector<ll int> num;
 
-  int GCD(const int &a, const int &b) {
-    int next;
-    int first = max(a, b);
-    int second = min(a, b);
+  ll int GCD(const ll int &a, const ll int &b) {
+    ll int next;
+    ll int first = max(a, b);
+    ll int second = min(a, b);
 
     while (first % second > 0) {
       next = first % second;
@@ -33,25 +34,22 @@ public:
       cin >> num[i]; // [1, 100]
 
     // find LCM of num
-    int gcd = num[0];
-    int lcm = num[0];
+    ll int gcd = num[0];
+    ll int lcm = num[0];
     if (n > 1)
       for (int i = 0; i < n - 1; i++) {
         gcd = GCD(lcm, num[i + 1]);
         lcm = lcm * num[i + 1] / gcd;
       }
 
-    int child = 0, mother = lcm;
+    ll int child = 0, mother = lcm;
     // child Sum(lcm / num)
-    for (int i = 0; i < n; i++)
+    for (ll int i = 0; i < n; i++)
       child += lcm / num[i];
 
     // is it Dividable?
-    int div = gcd = GCD(child, mother);
-    if (child / div == 1)
-      cout << mother / div << '\n';
-    else
-      cout << mother / div << '/' << child / div << '\n';
+    ll int div = gcd = GCD(child, mother);
+    cout << mother / div << '/' << child / div << '\n';
   }
 };
 
