@@ -1,6 +1,6 @@
 // 240820 1 #17070
 // Class 4
-// 00:
+// 01:00
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -43,13 +43,13 @@ class my {
       switch (type) {
       case 0:
         house[row][col][type] = DP(row, col - 1, 0);
-        if (isDiagonalPossible(row, col))
-          house[row][col][type] += DP(row, col - 1, 2);
+        // if (isDiagonalPossible(row, col))
+        house[row][col][type] += DP(row, col - 1, 2);
         break;
       case 1:
         house[row][col][type] = DP(row - 1, col, 1);
-        if (isDiagonalPossible(row, col))
-          house[row][col][type] += DP(row - 1, col, 2);
+        // if (isDiagonalPossible(row, col))
+        house[row][col][type] += DP(row - 1, col, 2);
         break;
       case 2:
         if (isDiagonalPossible(row, col))
