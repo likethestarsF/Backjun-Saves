@@ -1,7 +1,7 @@
 // 240820 2 #5639
 // 240821 1 #5639
 // Class 4
-// 00:00
+// 01:50
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -10,51 +10,39 @@ using namespace std;
 
 class my {
   vector<int> elems = {};
-  vector<int> tree;
+  struct node {
+    int data;
+    struct node *left, *right;
+    struct node *parent;
+  };
 
-  // left = root*2, right = root*2+1
-
-  void swap(int &a, int &b) {
-    int temp = a;
-    a = b;
-    b = temp;
+  struct node *newNode(int key) {
+    struct node *temp = new node;
+    temp->data = key;
+    temp->left = NULL;
+    temp->right = NULL;
+    return temp;
   }
 
-  void Insertion(const int &key, const int &rootIdx) {
-    if (tree[rootIdx] == -1) {
-      tree[rootIdx] = key;
-      return;
-    }
+  struct node *Insertion(const int &key, struct node *root) {
+    // Make New Node
+    if (root == NULL)
+      return newNode(key);
 
-    if (key > tree[rootIdx])
-      Insertion(key, rootIdx * 2 + 1);
-    else if (key < tree[rootIdx])
-      Insertion(key, rootIdx * 2);
-    else
-      return;
+    if (key > root->data)
+      root->right = Insertion(key, root->right);
+    else if (key < root->data)
+      root->left = Insertion(key, root->left);
+    return root;
   }
-  void Sorting() {
-    const int maxIdx = tree.size() - 1;
-    int curIdx = maxIdx;
 
-    /**
-     * 1. compare with the parent
-     * 2. swap if child is bigger than parent
-     * 3. else parent is bigger than child, break.
-     * 4. or cur is root, break.
-     */
-    while (true) {
-      if (curIdx == 1)
-        break;
+  void Postorder(struct node *root) {
+    if (root == NULL)
+      return;
 
-      if (tree[curIdx] > tree[curIdx / 2]) {
-        swap(tree[curIdx], tree[curIdx / 2]);
-        curIdx /= 2;
-      }
-
-      else
-        break;
-    }
+    Postorder(root->left);
+    Postorder(root->right);
+    cout << root->data << '\n';
   }
 
 public:
@@ -72,14 +60,16 @@ public:
         break;
       elems.push_back(input);
     }
+
     /* Main */
-    // Idx of Binary tree starts from 1
-    tree.resize(10, -1);
-    tree[0] = -1;
     // make the tree
-    for (int i = 1; i < elems.size() + 1; i++)
-      // Insertion(elems[i], 1)
-      ;
+    node root = {elems[0], NULL, NULL};
+    for (int i = 1; i < elems.size(); i++)
+      Insertion(elems[i], &root);
+    elems.clear();
+
+    // travel the tree
+    Postorder(&root);
   }
 };
 
