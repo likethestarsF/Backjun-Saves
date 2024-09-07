@@ -1,6 +1,6 @@
 // 240907 2 #2166
 // Class 5
-// 00:15
+// 00:25
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -31,8 +31,8 @@ public:
 
     ll int area = 0;
     for (int i = 0; i < N; i++) {
-      int curX = point[i].x;
-      int curY1, curY2;
+      ll int curX = point[i].x;
+      ll int curY1, curY2;
       if (i + 1 < N)
         curY1 = point[i + 1].y;
       else
