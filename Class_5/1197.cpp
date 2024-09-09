@@ -1,6 +1,6 @@
 // 240909 1 #1197
 // Class 5
-// 01:20
+// 01:30
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -11,8 +11,7 @@ using namespace std;
 
 class my {
   struct edge {
-    int next;
-    ll int dist;
+    int next, dist;
   };
   struct compare {
     bool operator()(edge &a, edge &b) { return a.dist > b.dist; }
@@ -31,7 +30,7 @@ class my {
    * minDist is selected everytimes since it's sorting dists by priority_queu.
    */
   int findSpanningTree(const int &start) {
-    vector<ll int> dist(vertexN, INF);
+    vector<int> dist(vertexN, INF);
     vector<bool> isVisited(vertexN, false);
     priority_queue<edge, vector<edge>, compare> pq = {};
     pq.push({start, 0});
@@ -56,22 +55,24 @@ class my {
         int next = edge.next;
         int nextDist = edge.dist;
 
-        // pass if next is already visited, no to do useless pushing
+        // pass if next is already visited, not to do useless pushing
         if (isVisited[next])
           continue;
 
-        // push if the next is an unvisited vertex
+        // push only when the next is an unvisited vertex
         pq.push({next, nextDist});
       }
 
-      // update isVisited marker after visiting adjacents
+      // update isVisited marker after pushing adjacents into pq
       isVisited[cur] = true;
     }
 
     // calc. the sum of dist
     ll int distSum = 0;
-    for (auto &elem : dist)
+    for (auto &elem : dist) {
+      // clog << elem << endl;
       distSum += elem;
+    }
 
     return distSum;
   }
@@ -83,10 +84,11 @@ public:
     graph.resize(vertexN);
     for (int i = 0; i < edgeN; i++) {
       int start, end;
-      ll int dist;
+      int dist;
       cin >> start >> end >> dist;
       start--, end--; // 0-style index
       graph[start].push_back({end, dist});
+      graph[end].push_back({start, dist});
     }
 
     // Print entire dists of spanning Tree
