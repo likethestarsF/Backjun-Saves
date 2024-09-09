@@ -1,6 +1,6 @@
 // 240909 1 #1197
 // Class 5
-// 00:45
+// 01:20
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -22,31 +22,53 @@ class my {
   vector<vector<edge>> graph;
 
   /**
-   * Prim's Algorithm
+   * Prim's Algorithm :
+   * finding a vertex that has a minimum dist for now.
+   * the vertext is next to the the every vertex currently selected.
+   * It should select edges to connect every vertex each other.
+
+   * dist to a vertex is updated after visiting that vertex itself.
+   * minDist is selected everytimes since it's sorting dists by priority_queu.
    */
   int findSpanningTree(const int &start) {
     vector<ll int> dist(vertexN, INF);
+    vector<bool> isVisited(vertexN, false);
     priority_queue<edge, vector<edge>, compare> pq = {};
     pq.push({start, 0});
-    dist[start] = 0;
 
     while (!pq.empty()) {
       int cur = pq.top().next;
+      int curDist = pq.top().dist;
       pq.pop();
 
-      // pass if already visited
+      // pass if cur is already visited
+      if (isVisited[cur])
+        continue;
+
+      /** update dist
+       * guess that since queue is already sorted,
+       * and we also isVisted marker, this Cond. always be true
+       */
+      if (dist[cur] > curDist)
+        dist[cur] = curDist;
 
       for (const edge &edge : graph[cur]) {
         int next = edge.next;
         int nextDist = edge.dist;
 
-        if (dist[next] > nextDist) {
-          dist[next] = nextDist;
-          pq.push({next, dist[next]});
-        }
+        // pass if next is already visited, no to do useless pushing
+        if (isVisited[next])
+          continue;
+
+        // push if the next is an unvisited vertex
+        pq.push({next, nextDist});
       }
+
+      // update isVisited marker after visiting adjacents
+      isVisited[cur] = true;
     }
 
+    // calc. the sum of dist
     ll int distSum = 0;
     for (auto &elem : dist)
       distSum += elem;
