@@ -1,6 +1,6 @@
 // 240911 1 #1806
 // Class 5
-// 00:20
+// 00:40
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -13,38 +13,38 @@ class my {
 public:
   void body() {
     /* INPUT */
-    cin >> N >> target; // [10, 100000), (0, 100000000]
-    vector<int> subseq(N);
+    cin >> N >> target;        // [10, 100000), (0, 100000000]
+    vector<int> subseq(N + 1); // index [0] : nothing is selected
 
-    cin >> subseq[0];
-    for (int i = 1; i < N; i++) {
+    subseq[0] = 0;
+    for (int i = 1; i <= N; i++) {
       int input_tmp;
       cin >> input_tmp; // [1, 10000] << 10000 * 100000 < 2^30
       subseq[i] = subseq[i - 1] + input_tmp;
     }
 
-    // find min length : O(N^2)
-
     /**
+     * Find min length ~O(N^2)
      * select 1st elem starting from the behind.
      * select 2nd elem starting from 0, to first-1
      * if it is not able, break that loop
      */
     int minLength = MAX;
-    for (int first = N - 1; first > 0; first--) {
-      // don't need to check the same or longer length than minLength : +1
+    for (int first = N; first > 0; first--) {
+      // don't need to check the same or longer length than minLength, so +1
       int second_start = max(0, (first - minLength) + 1);
+
       for (int second = second_start; second < first; second++) {
         int sum = subseq[first] - subseq[second];
 
         if (sum < target)
           break;
-
         else
           minLength = min(minLength, first - second);
       }
     }
 
+    /* OUTPUT */
     if (minLength == MAX)
       cout << 0;
     else
