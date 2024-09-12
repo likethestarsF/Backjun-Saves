@@ -52,7 +52,7 @@ class my {
   void Backtracking(vector<vector<int>> &sudoku, const int &depth) {
     if (depth == list.size()) {
       PrintSudoku(sudoku);
-      return;
+      exit(0);
     }
 
     int row = list[depth].first;
