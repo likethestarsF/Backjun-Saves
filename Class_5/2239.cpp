@@ -1,7 +1,7 @@
 // 240911 2 #2239
 // 240912 1 #2239
 // Class 5
-// 00:50
+// 01:00
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -39,11 +39,7 @@ class my {
     return isPossible;
   }
 
-  void Backtracking(vector<vector<int>> &sudoku, const int &depth) {
-    clog << "backtracking depth = " << depth << endl;
-    if (depth == 81) {
-      return;
-    }
+  bool Backtracking(vector<vector<int>> &sudoku, const int &depth) {
 
     for (int row = 0; row < 9; row++)
       for (int col = 0; col < 9; col++) {
@@ -56,12 +52,19 @@ class my {
           if (isPossible[i]) {
             // select
             sudoku[row][col] = i;
-            Backtracking(sudoku, depth + 1);
+
+            if (Backtracking(sudoku, depth + 1))
+              return true;
+
             // deselect
             sudoku[row][col] = 0;
           }
         }
+
+        return false;
       }
+
+    return true; // All cells are filled correctly
   }
 
 public:
@@ -73,10 +76,7 @@ public:
       for (int col = 0; col < 9; col++) {
         char tmpInput;
         cin >> tmpInput;
-        if (tmpInput == '0')
-          cnt++;
-        else
-          sudoku_origin[row][col] = tmpInput - '0';
+        sudoku_origin[row][col] = tmpInput - '0';
       }
 
     int depth = 81 - cnt;
