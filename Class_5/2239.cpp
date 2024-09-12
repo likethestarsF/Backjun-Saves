@@ -1,7 +1,7 @@
 // 240911 2 #2239
 // 240912 1 #2239
 // Class 5
-// 01:00
+// 01:20
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -10,6 +10,7 @@ using namespace std;
 
 class my {
   vector<vector<int>> sudoku_origin; // 9*9
+  vector<pair<int, int>> list = {};
 
   /**
    * SUDOKU
@@ -32,63 +33,61 @@ class my {
     int block_start_col = (y / 3) * 3;
 
     // 3-2. update marker
-    for (int row = block_start_row; row < block_start_row + 3; ++row)
-      for (int col = block_start_col; col < block_start_col + 3; ++col)
+    for (int row = block_start_row; row < block_start_row + 3; row++)
+      for (int col = block_start_col; col < block_start_col + 3; col++)
         isPossible[sudoku[row][col]] = false;
 
     return isPossible;
   }
 
-  bool Backtracking(vector<vector<int>> &sudoku, const int &depth) {
-
-    for (int row = 0; row < 9; row++)
+  void PrintSudoku(const vector<vector<int>> &sudoku) {
+    for (int row = 0; row < 9; row++) {
       for (int col = 0; col < 9; col++) {
-        // COND.
-        if (sudoku[row][col] != 0)
-          continue;
-
-        const vector<bool> isPossible = CheckCond(sudoku, row, col);
-        for (int i = 1; i <= 9; i++) {
-          if (isPossible[i]) {
-            // select
-            sudoku[row][col] = i;
-
-            if (Backtracking(sudoku, depth + 1))
-              return true;
-
-            // deselect
-            sudoku[row][col] = 0;
-          }
-        }
-
-        return false;
+        cout << sudoku[row][col];
       }
+      cout << '\n';
+    }
+  }
 
-    return true; // All cells are filled correctly
+  void Backtracking(vector<vector<int>> &sudoku, const int &depth) {
+    if (depth == list.size()) {
+      PrintSudoku(sudoku);
+      return;
+    }
+
+    int row = list[depth].first;
+    int col = list[depth].second;
+
+    const vector<bool> isPossible = CheckCond(sudoku, row, col);
+    for (int i = 1; i <= 9; i++) {
+      // COND.
+      if (isPossible[i]) {
+        // select
+        sudoku[row][col] = i;
+
+        Backtracking(sudoku, depth + 1);
+
+        // deselect
+        sudoku[row][col] = 0;
+      }
+    }
   }
 
 public:
   void body() {
     /* INPUT */
     sudoku_origin.resize(9, vector<int>(9, 0));
-    int cnt = 0;
     for (int row = 0; row < 9; row++)
       for (int col = 0; col < 9; col++) {
         char tmpInput;
         cin >> tmpInput;
         sudoku_origin[row][col] = tmpInput - '0';
+
+        if (tmpInput == '0')
+          list.push_back({row, col});
       }
 
-    int depth = 81 - cnt;
-    Backtracking(sudoku_origin, depth);
-
-    /* OUTPUT */
-    for (int row = 0; row < 9; row++) {
-      for (int col = 0; col < 9; col++) {
-        cout << sudoku_origin[row][col];
-      }
-      cout << '\n';
-    }
+    Backtracking(sudoku_origin, 0);
   }
 };
 
