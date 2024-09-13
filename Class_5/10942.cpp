@@ -1,6 +1,6 @@
 // 240913 1 #10942
 // Class 5
-// 00:20
+// 00:30
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -28,7 +28,10 @@ class my {
     if (start == end)
       return DP[start][end] = true;
 
-    else if (start > end)
+    if (start + 1 == end && seq[start] == seq[end])
+      return DP[start][end] = true;
+
+    if (start > end)
       return DP[start][end] = false;
 
     else /*start < end*/ {
