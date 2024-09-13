@@ -1,6 +1,6 @@
 // 240913 2 #17404
 // Class 5
-// 00:35
+// 00:50
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -19,12 +19,42 @@ class my {
 
    * DP[i][x] : the min value, selecting color in the ith house
    * DP[i][x] = min(DP[i-1][y], DP[i-1][z]) + cost[i][x]
-   * do we have to define DP[0] manually?
-   * fix the 0st manually elem, update last elems up to houseSize-2.
+   * DP is changed into prev; don't need to save every stage by DP.
 
-   * Bottom-Up.
-   * starting, 0 1 2
+   * do we have to define DP[0] manually?
+   * -> fix the 0st manually elem, update last elems
    */
+  int findMin(int &startColor) {
+    vector<int> prev(3, 0);
+
+    // Coloring 1st, only select 1 color
+    for (int i = 0; i < 3; i++) {
+      if (i == startColor)
+        prev[i] = cost[0][i];
+      else
+        prev[i] = MAX;
+    }
+
+    // Coloring everything, except 1st
+    for (int idxH = 1; idxH < houseN; idxH++) {
+      vector<int> next(3, 0);
+      for (int idxC = 0; idxC < 3; idxC++) {
+        next[idxC] =
+            min(prev[(idxC + 1) % 3], prev[(idxC + 2) % 3]) + cost[idxH][idxC];
+      }
+      prev = next;
+    }
+
+    // Except the color[0] == color[n] case
+    int min = MAX;
+    for (int i = 0; i < 3; i++) {
+      if (i == startColor)
+        continue;
+      min = std::min(min, prev[i]);
+    }
+
+    return min;
+  }
 
 public:
   void body() {
@@ -34,21 +64,10 @@ public:
     for (int i = 0; i < houseN; i++)
       cin >> cost[i][0] >> cost[i][1] >> cost[i][2]; // [1, 1000]
 
-    vector<vector<int>> DP(houseN, vector<int>(3, 0));
-    for (int i = 0; i < 3; i++)
-      DP[0][i] = cost[0][i];
-
-    for (int idxH = 1; idxH < houseN; idxH++)
-      for (int idxC = 0; idxC < 3; idxC++) {
-        DP[idxH][idxC] =
-            min(DP[idxH - 1][(idxC + 1) % 3], DP[idxH - 1][(idxC + 2) % 3]) +
-            cost[idxH][idxC];
-      }
-
-    // Find Min
     int min = MAX;
-    for (const auto &sum : DP[houseN - 1])
-      min = std::min(min, sum);
+    for (int i = 0; i < 3; i++)
+      min = std::min(min, findMin(i));
+
     cout << min;
   }
 };
