@@ -1,6 +1,6 @@
 // 240913 2 #17404
 // Class 5
-// 00:15
+// 00:35
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -17,10 +17,13 @@ class my {
    * 2. color[n] != color[n-1] && color[0]
    * 3. color[i] != color[i-1] && color[i+1], i>=1
 
-   * color : 012121..., 102020..., 21010...
-   * color of [0] is used only at the [0]
-   * remain 2 colors are used repeatedly. 1212 or 2121
-   -> 3C1 * 2! = total 6 cases
+   * DP[i][x] : the min value, selecting color in the ith house
+   * DP[i][x] = min(DP[i-1][y], DP[i-1][z]) + cost[i][x]
+   * do we have to define DP[0] manually?
+   * fix the 0st manually elem, update last elems up to houseSize-2.
+
+   * Bottom-Up.
+   * starting, 0 1 2
    */
 
 public:
@@ -31,27 +34,21 @@ public:
     for (int i = 0; i < houseN; i++)
       cin >> cost[i][0] >> cost[i][1] >> cost[i][2]; // [1, 1000]
 
-    vector<int> sumOfCost(6, 0); // maxSum = 1000 * 1000 < 2^30
-    // 6cases : {012, 021, 102, 120, 201, 210}, not perfectly correct
-    const vector<vector<int>> order = {{1, 2}, {2, 1}, {0, 2},
-                                       {2, 0}, {0, 1}, {1, 0}};
-    // init.
-    sumOfCost[0] = cost[0][0];
-    sumOfCost[1] = cost[0][0];
-    sumOfCost[2] = cost[0][1];
-    sumOfCost[3] = cost[0][1];
-    sumOfCost[4] = cost[0][2];
-    sumOfCost[5] = cost[0][2];
+    vector<vector<int>> DP(houseN, vector<int>(3, 0));
+    for (int i = 0; i < 3; i++)
+      DP[0][i] = cost[0][i];
 
-    for (int i = 1; i < houseN; i++)
-      for (int j = 0; j < 6; j++) {
-        sumOfCost[j] += cost[i][order[j][i % 2]];
+    for (int idxH = 1; idxH < houseN; idxH++)
+      for (int idxC = 0; idxC < 3; idxC++) {
+        DP[idxH][idxC] =
+            min(DP[idxH - 1][(idxC + 1) % 3], DP[idxH - 1][(idxC + 2) % 3]) +
+            cost[idxH][idxC];
       }
 
     // Find Min
     int min = MAX;
-    for (const auto &elem : sumOfCost)
-      min = std::min(min, elem);
+    for (const auto &sum : DP[houseN - 1])
+      min = std::min(min, sum);
     cout << min;
   }
 };
