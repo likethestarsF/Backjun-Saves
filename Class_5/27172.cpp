@@ -1,7 +1,8 @@
 // 240915 1 #27172
 // Class 5
-// 00:15
+// 00:40
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <vector>
 #define MAX 1000000
@@ -9,44 +10,44 @@ using namespace std;
 
 class my {
   int playerN;
-  vector<int> card;
+  vector<bool> card;
+  vector<int> player;
   vector<int> score;
-
-  void Battle(const int &p1, const int &p2) {
-    if (card[p1] % card[p2] == 0) {
-      score[p1]--;
-      score[p2]++;
-    }
-
-    else if (card[p2] % card[p1] == 0) {
-      score[p2]--;
-      score[p1]++;
-    }
-  }
 
 public:
   void body() {
+    card.resize(MAX + 1, false);
+    score.resize(MAX + 1, 0);
     /* INPUT */
     cin >> playerN;
-    card.resize(playerN);
-    for (int i = 0; i < playerN; i++)
-      cin >> card[i]; // [1, 1000000]
+    player.resize(playerN);
+    for (int i = 0; i < playerN; i++) {
+      cin >> player[i]; // [1, 1000000]
+      card[player[i]] = true;
+    }
 
     /** Game RULES
      * 1. if x % y == 0, y wins, x loses.
      * 2. else, both x and y draw.
      * 3. winner gets 1 point, loser loses 1 point. nothig changes if draw.
      * a player must battle with everyone else; each battle happen only 1 time.
+
+
+     * Use Sieve of Eratosthenes
      */
-    score.resize(playerN, 0);
     for (int p1 = 0; p1 < playerN; p1++)
-      for (int p2 = p1 + 1; p2 < playerN; p2++) {
-        Battle(p1, p2);
+      for (int num = player[p1] * 2; num <= MAX; num += player[p1]) {
+        if (card[num]) {
+          // Battle when num is a one of the cards
+          score[player[p1]]++;
+          score[num]--;
+        }
       }
 
     /* OUTPUT */
-    for (const int &e : score)
-      cout << e << " ";
+    for (int i = 0; i < playerN; i++) {
+      cout << score[player[i]] << " ";
+    }
   }
 };
 
