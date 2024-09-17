@@ -1,11 +1,12 @@
 // 240917 1 #1644
 // Class 5
-// 00:50
+// 01:30
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <vector>
 #define MAX 4000000
+#define ll long long
 using namespace std;
 
 class my {
@@ -13,18 +14,20 @@ class my {
 
   vector<int> Sieve(const int &x) {
     vector<int> result = {};
-    vector<int> isPrime(x + 1, true);
+    vector<bool> isPrime(x + 1, true);
+    isPrime[0] = isPrime[1] = false;
 
-    for (int i = 2; i <= x; i++) {
-      for (int j = i * 2; j <= x; j += i) {
-        isPrime[j] = false;
+    for (int i = 2; i <= sqrt(x); i++) {
+      if (isPrime[i]) {
+        for (int j = i * 2; j <= x; j += i) {
+          isPrime[j] = false;
+        }
       }
     }
 
     for (int i = 2; i <= x; i++) {
-      if (isPrime[i] == false)
-        continue;
-      result.push_back(i);
+      if (isPrime[i])
+        result.push_back(i);
     }
 
     return result;
@@ -36,7 +39,7 @@ public:
     cin >> x;
 
     // Find the list of the Prime Numbers : O(NloglogN)
-    vector<int> primeList = Sieve(MAX);
+    vector<int> primeList = Sieve(x);
 
     /**
      * Count Cases
@@ -48,44 +51,26 @@ public:
      * 3-3. If sum is equal to x, increase the cnt && move the end point
      */
 
-    // 1
-    int idxEnd = -1;
-    for (int i = 0; i < primeList.size(); i++) {
-      if (primeList[i] > x) {
-        idxEnd = i;
-        break;
-      }
-    }
-
     // 3
     int cnt = 0;
     int pLeft = 0, pRight = 0;
-    int sum = primeList[pLeft];
-    while (pLeft <= pRight && (pLeft < idxEnd && pRight < idxEnd)) {
+
+    ll sum = 0;
+    while (pRight < primeList.size()) {
+      sum += primeList[pRight];
+
       // 3-1
-      if (sum > x) {
+      while (sum > x && pLeft <= pRight) {
         sum -= primeList[pLeft];
         pLeft++;
       }
 
-      // 3-2
-      else if (sum < x) {
-        pRight++;
-        if (pRight == idxEnd)
-          break;
-
-        sum += primeList[pRight];
-      }
-
       // 3-3
-      else if (sum == x) {
+      if (sum == x)
         cnt++;
-        pRight++;
-        if (pRight == idxEnd)
-          break;
 
-        sum += primeList[pRight];
-      }
+      // 3-2
+      pRight++;
     }
 
     cout << cnt;
