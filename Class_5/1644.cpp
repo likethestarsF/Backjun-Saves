@@ -56,28 +56,12 @@ public:
         break;
       }
     }
-    // primeList.resize(idxEnd);
-
-    /* // 2
-    for (int i = 0; i < idxEnd; i++) {
-      int sum = 0;
-      for (int j = i; j < idxEnd; j++) {
-        sum += primeList[j];
-
-        if (sum == x) {
-          cnt++;
-          break;
-        } else if (sum > x)
-          break;
-      }
-    }
-    */
 
     // 3
     int cnt = 0;
     int pLeft = 0, pRight = 0;
     int sum = primeList[pLeft];
-    while (pLeft <= pRight && pRight < idxEnd) {
+    while (pLeft <= pRight && (pLeft < idxEnd && pRight < idxEnd)) {
       // 3-1
       if (sum > x) {
         sum -= primeList[pLeft];
@@ -87,6 +71,9 @@ public:
       // 3-2
       else if (sum < x) {
         pRight++;
+        if (pRight == idxEnd)
+          break;
+
         sum += primeList[pRight];
       }
 
@@ -94,6 +81,9 @@ public:
       else if (sum == x) {
         cnt++;
         pRight++;
+        if (pRight == idxEnd)
+          break;
+
         sum += primeList[pRight];
       }
     }
