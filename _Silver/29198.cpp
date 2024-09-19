@@ -1,6 +1,6 @@
 // 240919 1 #29198
 // Random Marathon 16 H
-// 00:10
+// 00:15
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -15,23 +15,23 @@ class my {
     for (auto e : k)
       clog << e << endl;
     if (flag)
-      exit(0);
+      exit(1);
   }
 
 public:
   void body() {
     /* Input */
     cin >> strN >> length >> selecN;
-    str.resize(strN);
-    for (int i = 0; i < strN; i++)
-      cin >> str[i];
-    sort(str.begin(), str.end());
 
-    // test(str, 1);
+    str.resize(strN);
+    for (int i = 0; i < strN; i++) {
+      cin >> str[i];
+      sort(str[i].begin(), str[i].end());
+    }
+    sort(str.begin(), str.end());
 
     /* Main */
     vector<int> alphabetCnt(26, 0);
-
     for (int i = 0; i < selecN; i++)
       for (int c = 0; c < str[i].size(); c++) {
         alphabetCnt[str[i][c] - 'A']++;
