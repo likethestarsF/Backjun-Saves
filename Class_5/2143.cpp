@@ -48,15 +48,15 @@ public:
       cin >> b_arr[i];
 
     /* Main */
-    // 1. make Sub array: Prefix Sum
+    // 1. Make Sub array: Prefix Sum
     vector<int> a_sub = MakeSubArr(a_arr);
     vector<int> b_sub = MakeSubArr(b_arr);
     sort(b_sub.begin(), b_sub.end()); // sort for the B.S.
 
-    // Sequentially select a_sub -> find proper b_sub by Binary Search
-    int cnt = 0;
+    // 2. Sequentially select a_sub -> find proper b_sub by Binary Search
+    ll cnt = 0;
     for (int i = 0; i < a_sub.size(); i++) {
-      const int target = T - a_sub[i];
+      const ll target = T - a_sub[i];
 
       // Binary Search
       int low = lower_bound(b_sub.begin(), b_sub.end(), target) - b_sub.begin();
