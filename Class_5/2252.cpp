@@ -1,6 +1,6 @@
-// 240919 1 #2252
+// 240919 3 #2252
 // Class 5
-// 00:50
+// 01:30
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -17,55 +17,66 @@ class my {
   }
 
   int studentNum, compareNum;
-  vector<vector<short>> graphTable;
+  vector<vector<int>> graph;
+  vector<vector<int>> graphRev;
 
-  /** sorta Topology Sort
-   * 1. travel the entire node
-   * 2. find vertices which has no parent(degree==0), add them in to a queue.
-   * 3. while(!queue.empty). delete the edges of each vertex and print them.
-   * 4. if queue is empty, goto 2. again.
-   * 5. if there's no vertex left, Finish.
-   */
-  void travelGraph(const int &start, vector<bool> &isVisited) {
+  void travelGraph(/* const int &start, vector<bool> &isVisited */) {
+    vector<bool> isVisited(studentNum, false);
+    // Find the vertices which has no parent && Unvisited
+    while (true) {
+      queue<int> q = {};
 
-    // Find the vertices which has no parent
+      for (int i = 0; i < studentNum; i++) {
+        if (!isVisited[i] && graph[i].empty())
+          q.push(i);
+      }
 
-    queue<int> q = {};
+      if (q.empty())
+        break; // Exit
 
-    ;
-    /* Output */
-    ;
+      while (!q.empty()) {
+        int cur = q.front();
+        isVisited[cur] = true;
+        cout << cur + 1 << ' ';
+        q.pop();
+
+        // Remove the edges which 'cur' is the parent
+        for (int i = 0; i < graphRev[cur].size(); i++) {
+          // find 'cur' in the graph and erase.
+          int valueShort = graphRev[cur][i];
+          auto itr =
+              find(graph[valueShort].begin(), graph[valueShort].end(), cur);
+          if (itr != graph[valueShort].end())
+            graph[valueShort].erase(itr);
+        }
+      }
+    }
   }
 
 public:
   void body() {
     /* Input */
-    cin >> studentNum >> compareNum; // [1, 32000], [1, 1e5]
-    // graph[x][y] = 1, x is taller, [x][y] =-1, y is taller
-    graphTable.resize(studentNum, vector<short>(studentNum, 0));
+    cin >> studentNum >> compareNum;          // [1, 32000], [1, 1e5]
+    graph.resize(studentNum, vector<int>(0)); // graph[x] = {a, ...} a is taller
+    graphRev.resize(studentNum, vector<int>(0));
     for (int i = 0; i < compareNum; i++) {
       int taller, shorter;
       cin >> taller >> shorter;
       taller--, shorter--;
-      graphTable[taller][shorter] = 1;
-      graphTable[shorter][taller] = -1;
+      graph[shorter].push_back(taller);
+      graphRev[taller].push_back(shorter);
     }
 
-    /**
-     * If the graph is disconnected, Don't need to care the order.
-     * We only have to treat the order in the same graph.
-     * Since we don't know graph is not unified,
-     * -> isVisited is essential, to travel all vetices.
-
-     * 1. start traveling from the first, arbitrary student.
-     * 2. If the travel is terminated, find the unvisited by isVisited marker.
-     * 3. Repeat this.
+    /** sorta Topology Sort
+     * 1. travel the entire verteices
+     * 2. find vertices which has no parent(degree==0), add them in to a queue.
+     * 3. while(!queue.empty). delete the edges of each vertex and print them.
+     *  Use graphRev to save which vertex is connected.
+     *  This is used not to travel entire graph when we delete edge.
+     * 4. if queue is empty, goto 2. again.
+     * 5. if there's no vertex left, Finish.
      */
-    vector<bool> isVisited(studentNum, false);
-    for (int i = 0; i < studentNum; i++) {
-      if (!isVisited[i])
-        travelGraph(i, isVisited);
-    }
+    travelGraph();
   }
 };
 
