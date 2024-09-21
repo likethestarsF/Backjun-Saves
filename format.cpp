@@ -10,6 +10,13 @@ using namespace std;
 class my {
 
 public:
+template <typename T> void testArr(T k, bool exitFlag) {
+  for (auto e : k)
+    clog << e << endl;
+  if (exitFlag)
+    exit(1);
+}
+
   void body() {
 
     
