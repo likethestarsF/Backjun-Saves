@@ -1,20 +1,20 @@
 // 240921 1 #2473
 // Class 5
-// 00:40
+// 01:00
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <vector>
-#define INF 4e9
+#define INF 5e9
 #define ll long long
 using namespace std;
 
 class MY {
   int solutionN;
-  vector<int> solution;
-  vector<int> result;
+  vector<ll> solution;
+  vector<ll> result;
 
-  void updateGlobalMin(ll &globalMin, ll localMin, int a, int b, int c) {
+  void updateGlobalMin(ll &globalMin, ll localMin, ll a, ll b, ll c) {
     if (abs(globalMin) > abs(localMin)) {
       globalMin = localMin;
 
@@ -24,7 +24,7 @@ class MY {
     }
   }
 
-  void printResult(int a, int b, int c) { cout << a << ' ' << b << ' ' << c; }
+  void printResult(ll a, ll b, ll c) { cout << a << ' ' << b << ' ' << c; }
 
 public:
   MY() {
@@ -53,13 +53,14 @@ public:
     ll globalMin = INF;
     for (int i = 0; i < solutionN - 2; i++) {
       // 1
-      const int *first = &solution[i];
+      ll *first = &solution[i];
 
       // 2
       int ptrL = i + 1, ptrR = solutionN - 1;
+
       while (ptrL < ptrR) {
-        const int *second = &solution[ptrL];
-        const int *third = &solution[ptrR];
+        ll *second = &solution[ptrL];
+        ll *third = &solution[ptrR];
         const ll localSum = *first + *second + *third;
 
         // 3-3
