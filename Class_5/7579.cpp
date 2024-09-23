@@ -36,10 +36,10 @@ class MY {
                   dpTable[i - 1][idxCost - cost[i]] + memory[i]);
 
         if (dpTable[i][idxCost] >= targetMemory)
-          return minCost = idxCost;
+          minCost = min(minCost, idxCost);
       }
 
-    return minCost; // error
+    return minCost;
   }
 
 public:
