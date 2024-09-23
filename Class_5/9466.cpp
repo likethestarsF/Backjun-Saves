@@ -1,6 +1,6 @@
 // 240923 2 #9466
 // Class 5
-// 00:50
+// 01:00
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -20,36 +20,32 @@ class MY {
     for (int i = 0; i < studentNum; i++) {
       if (isInTeam[i])
         continue;
+
       vector<bool> isVisited = isInTeam;
+      int next = i;
 
-      queue<int> q;
-      q.push(i);
-      while (!q.empty()) {
-        int cur = q.front();
+      while (true) {
+        int cur = next;
         isVisited[cur] = true;
-        q.pop();
-        int next = graph[cur];
+        next = graph[cur];
 
-        // go to next
+        // 1. Go to next
         if (!isVisited[next])
-          q.push(next);
+          continue;
 
-        // update isInTeam
-        else {
-          // there's a loop in the current queue.
-          // It is needed to distingush loop members from non-loop members.
-          if (!isInTeam[next]) {
-            teamMemberNum += countMembers(next);
-          }
+        // 2. Update isInTeam
 
-          // Everyone visited by current queue now belongs to a team.
-          // they must be a team member, or a non-team member.
-          // Anyway, No matter where theys belongs, they belongs to something.
-          isInTeam = isVisited;
+        // 2-1. If a loop is in the current queue.
+        // * it is needed to distingush loop members from non-loop members.
+        if (!isInTeam[next])
+          teamMemberNum += countMembers(next);
 
-          // End of While() Loop
-          break;
-        }
+        // 2-2. Everyone visited by current queue now belongs to a team.
+        // * they must be a team member, or a non-team member.
+        // * anyway, No matter where they belong, they belong to somewhere.
+        isInTeam = isVisited;
+
+        break; // End of While() Loop
       }
     }
 
@@ -58,10 +54,9 @@ class MY {
 
   int countMembers(const int &root) {
     int cnt = 0;
-    int cur = root;
     int next = root;
     while (true) {
-      cur = next;
+      int cur = next;
       cnt++;
       next = graph[cur];
 
