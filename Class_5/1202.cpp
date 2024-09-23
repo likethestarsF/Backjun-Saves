@@ -14,7 +14,7 @@ class MY {
     int weight, value;
 
     static bool compare(const jewel &a, const jewel &b) {
-      return (double)a.value / a.weight > (double)b.value / b.weight;
+      return a.value / a.weight > b.value / b.weight;
     }
   };
 
@@ -38,6 +38,7 @@ public:
   void body() {
     // 'value/weight': decreasing order
     sort(jewelList.begin(), jewelList.end(), jewel::compare);
+    sort(bag.begin(), bag.end());
 
     long long maxValue = 0; // 3e5*1e6 > 2^31
     for (int i = 0; i < bagNum; i++) {
