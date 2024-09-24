@@ -1,6 +1,6 @@
 // 240925 1 #7453
 // Class 5
-// 00:20
+// 00:40
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -11,7 +11,7 @@
 using namespace std;
 
 class MY {
-  int arrSize;             // [,400]
+  int arrSize;             // [,4000]
   vector<vector<int>> arr; //[ABCD][arrSize], [-,+2^28]
 
 public:
@@ -25,39 +25,38 @@ public:
   }
 
   void body() {
-    // FIND arr[0][a] + arr[1][b] = arr[2][c] + arr[3][d] == 0
+
+    /** FIND arr[0][a] + arr[1][b] = arr[2][c] + arr[3][d] == 0
+     * 1. Divide 4 arr into 2 & 2 : sum(AB) & sum(CD)
+     * 2. Find AB + CD == 0 , AB == -CD
+     */
+
+    // 1-1. sum(AB) : O(N^2)
+    vector<int> AB = {};
+    for (int idx1 = 0; idx1 < arrSize; idx1++)
+      for (int idx2 = 0; idx2 < arrSize; idx2++)
+        AB.push_back(arr[0][idx1] + arr[1][idx2]);
+    sort(AB.begin(), AB.end());
+    // 1-2. CD : O(N^2)
+    vector<int> CD = {};
+    for (int idx1 = 0; idx1 < arrSize; idx1++)
+      for (int idx2 = 0; idx2 < arrSize; idx2++)
+        CD.push_back(arr[2][idx1] + arr[3][idx2]);
+    sort(CD.begin(), CD.end());
+
+    // 2. use Two pointer
     int answerCnt = 0;
-    for (int i = 0; i < 4; i++)
-      sort(arr[i].begin(), arr[i].end());
-
-    // 1. Select 1st elem, O(N)
-    for (int idx1 = 0; idx1 < arrSize; idx1++) {
-      const int *first = &arr[0][idx1];
-
-      // 2. Select 2nd elem, O(N) : O(N^2) : 400^2 = 16e4
-      for (int idx2 = 0; idx2 < arrSize; idx2++) {
-        const int *second = &arr[1][idx2];
-
-        // 3. Select 3rd and 4th by Two pointer, O(N + N) : O(N^3) : 64e6
-        const int sumPartial = *first + *second;
-        int idx3 = 0, idx4 = arrSize - 1;
-        while (idx3 < arrSize && idx4 >= 0) {
-          const int *third = &arr[2][idx3];
-          const int *forth = &arr[3][idx4];
-          int sum = sumPartial + *third + *forth;
-
-          if (sum == 0) {
-            answerCnt++;
-            idx3++;
-            idx4--;
-          }
-
-          else if (sum < 0)
-            idx3++;
-          else if (sum > 0)
-            idx4--;
-        }
+    int idxL = 0, idxR = CD.size() - 1;
+    while (idxL < AB.size() && idxR >= 0) {
+      if (AB[idxL] == -CD[idxR]) {
+        answerCnt++;
+        idxL++, idxR--;
       }
+
+      else if (AB[idxL] < -CD[idxR])
+        idxL++;
+      else if (AB[idxL] > -CD[idxR])
+        idxR--;
     }
 
     cout << answerCnt;
