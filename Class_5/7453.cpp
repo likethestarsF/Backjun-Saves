@@ -1,6 +1,6 @@
 // 240925 1 #7453
 // Class 5
-// 01:00
+// 01:30
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -12,7 +12,7 @@ using namespace std;
 
 class MY {
   int arrSize;             // [,4000]
-  vector<vector<int>> arr; //[ABCD][arrSize], [-,+2^28]
+  vector<vector<int>> arr; // [ABCD][arrSize], [-,+2^28]
 
 public:
   MY() {
@@ -32,12 +32,14 @@ public:
 
     // 1-1. sum(AB) : O(N^2)
     vector<int> AB = {};
+    AB.reserve(arrSize * arrSize);
     for (int idx1 = 0; idx1 < arrSize; idx1++)
       for (int idx2 = 0; idx2 < arrSize; idx2++)
         AB.push_back(arr[0][idx1] + arr[1][idx2]);
     sort(AB.begin(), AB.end());
     // 1-2. CD : O(N^2)
     vector<int> CD = {};
+    CD.reserve(arrSize * arrSize);
     for (int idx1 = 0; idx1 < arrSize; idx1++)
       for (int idx2 = 0; idx2 < arrSize; idx2++)
         CD.push_back(arr[2][idx1] + arr[3][idx2]);
@@ -45,44 +47,26 @@ public:
 
     ll answerCnt = 0;
 
-    // 2. use Two pointer, O(N^2) * N : = 64e12
-    int idxL = 0, idxR = CD.size() - 1;
-    while (idxL < AB.size() && idxR >= 0) {
+    // 2. Two pointer
+    int idxL = 0, idxR = arrSize * arrSize - 1;
+    while (idxL < arrSize * arrSize && idxR >= 0) {
+      // 2-1.
       if (AB[idxL] == -CD[idxR]) {
-        // count how many cases in there
         ll cntAB = 1;
-        for (int i = idxL + 1; i < AB.size(); i++) {
-          if (AB[i] == AB[idxL]) {
-            cntAB++;
-            continue;
-          }
-
-          else {
-            idxL = i; // update idxL
-            break;
-          }
-          idxL = AB.size(); // update idxL
-        }
+        while (idxL + 1 < arrSize * arrSize && AB[idxL] == AB[idxL + 1])
+          idxL++, cntAB++;
 
         ll cntCD = 1;
-        for (int i = idxR - 1; i >= 0; i--) {
-          if (CD[i] == CD[idxR]) {
-            cntCD++;
-            continue;
-          }
-
-          else {
-            idxR = i; // update idxR
-            break;
-          }
-          idxR = 0; // update idxR
-        }
+        while (idxR - 1 >= 0 && CD[idxR] == CD[idxR - 1])
+          idxR--, cntCD++;
 
         answerCnt += cntAB * cntCD;
+        idxL++;
       }
-
+      // 2-2.
       else if (AB[idxL] < -CD[idxR])
         idxL++;
+      // 2-3.
       else if (AB[idxL] > -CD[idxR])
         idxR--;
     }
