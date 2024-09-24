@@ -50,7 +50,7 @@ public:
     while (idxL < AB.size() && idxR >= 0) {
       if (AB[idxL] == -CD[idxR]) {
         // count how many cases in there
-        int cntAB = 1;
+        ll cntAB = 1;
         for (int i = idxL + 1; i < AB.size(); i++) {
           if (AB[i] == AB[idxL]) {
             cntAB++;
@@ -64,10 +64,10 @@ public:
           idxL = AB.size(); // update idxL
         }
 
-        int cntCD = 1;
+        ll cntCD = 1;
         for (int i = idxR - 1; i >= 0; i--) {
           if (CD[i] == CD[idxR]) {
-            cntCD--;
+            cntCD++;
             continue;
           }
 
