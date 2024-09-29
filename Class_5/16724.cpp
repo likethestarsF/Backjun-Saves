@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 // #define MAX 2147483647
-#define ll long long
+// #define ll long long
 using namespace std;
 
 class MY {
@@ -36,19 +36,21 @@ class MY {
   void travelLoop(const int &rowStart, const int &colStart,
                   vector<vector<char>> &map, vector<vector<bool>> &isVisited) {
     int row = rowStart, col = colStart;
+    vector<vector<bool>> isVisitedTemp = isVisited;
 
     while (true) {
-      isVisited[row][col] = true;
+      isVisitedTemp[row][col] = true;
       pair<int, int> next = move(map[row][col]);
       int rowNext = row + next.first, colNext = col + next.second;
 
-      if (isVisited[rowNext][colNext]) {
-        // Add a Safezone. (at map)
-        if (map[rowNext][colNext] != 'Z') {
+      if (isVisitedTemp[rowNext][colNext]) {
+        // Add a Safezone only when we reached a new loop
+        if (!isVisited[rowNext][colNext]) {
           map[row][col] = 'Z';
           safeZoneCnt++;
         }
 
+        isVisited = isVisitedTemp;
         return;
       }
 
@@ -78,6 +80,9 @@ public:
      * * end: directing where isVisited[][] == true
      * 3 If what end directs is Safezone, just end the Loop
      * * Else, change the end into Safezone
+
+     * 4. Use isVisitedTemp and update original one after the travel,
+     * * in order to make a new safe zone only when new loop is started.
      */
     for (int row = 0; row < rowSize; row++)
       for (int col = 0; col < colSize; col++) {
