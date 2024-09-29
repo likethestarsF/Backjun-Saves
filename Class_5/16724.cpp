@@ -10,6 +10,8 @@ using namespace std;
 
 class MY {
   int rowSize, colSize;
+  vector<vector<char>> map;
+  vector<vector<int>> isVisited;
   int safeZoneCnt = 0;
 
   pair<int, int> move(const char &input) {
@@ -33,46 +35,44 @@ class MY {
     }
   }
 
-  void travelLoop(const int &rowStart, const int &colStart,
-                  vector<vector<char>> &map, vector<vector<bool>> &isVisited) {
+  void travelLoop(const int &rowStart, const int &colStart) {
     int row = rowStart, col = colStart;
-    vector<vector<bool>> isVisitedTemp = isVisited;
+
+    // Suppose that current loop is a new.
+    safeZoneCnt++;
 
     while (true) {
-      isVisitedTemp[row][col] = true;
+      isVisited[row][col] = safeZoneCnt;
       pair<int, int> next = move(map[row][col]);
       int rowNext = row + next.first, colNext = col + next.second;
 
-      if (isVisitedTemp[rowNext][colNext]) {
-        // Add a Safezone only when we reached a new loop
-        if (!isVisited[rowNext][colNext]) {
-          map[row][col] = 'Z';
-          safeZoneCnt++;
-        }
+      if (isVisited[rowNext][colNext] != 0) {
+        // Actually, current loop isn't new one. -> cnt--
+        if (isVisited[rowNext][colNext] != safeZoneCnt)
+          safeZoneCnt--;
 
-        isVisited = isVisitedTemp;
-        return;
+        break;
       }
 
-      // Update row & col
+      // Update row & col to go next
       row = rowNext, col = colNext;
     }
   }
 
 public:
-  MY() {}
+  // MY() {}
 
   void body() {
     /* Input */
     cin >> rowSize >> colSize; // [,1000]
-    vector<vector<char>> map(rowSize, vector<char>(colSize));
+    map.resize(rowSize, vector<char>(colSize));
     for (int row = 0; row < rowSize; row++)
       for (int col = 0; col < colSize; col++) {
         cin >> map[row][col];
       }
 
     /* Main */
-    vector<vector<bool>> isVisited(rowSize, vector<bool>(colSize, false));
+    isVisited.resize(rowSize, vector<int>(colSize, 0));
 
     /** Travel the map : O(N^2)
      * 1. Visit every point. pass if it's already visited.
@@ -86,10 +86,8 @@ public:
      */
     for (int row = 0; row < rowSize; row++)
       for (int col = 0; col < colSize; col++) {
-        if (isVisited[row][col])
-          continue;
-
-        travelLoop(row, col, map, isVisited);
+        if (isVisited[row][col] == 0)
+          travelLoop(row, col);
       }
 
     cout << safeZoneCnt;
