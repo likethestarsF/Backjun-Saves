@@ -3,6 +3,26 @@
 
 
 # Git Commands
+- Git option setting. Since git pane is not working.
+
+1. Edit the git option by below codes. (use `git config --list` to check the current config.)
+```
+git config --global user.name "likethestarsF"
+git config --global user.email "decm1219@naver.com"
+git config user.name "likethestarsF"
+git config user.email "decm1219@naver.com"
+```
+2. Use `git status` and specify a file to commit by `git add {filename}`.
+3. `git commit -m "Message I want to use as a title"`
+4. If I want to add the descriptions use `git commit --amend` or
+```
+git commit -m "Title
+
+Write the detail descriptions"
+```
+5. `git push`
+
+
 - Erase the last Commit
 
 `git reset --soft HEAD~1`
@@ -16,7 +36,7 @@
 `git rebase -i HEAD~3`
 
 Select a specific commit which I want to rewrite by editing `pick` into `reword`
- 
+
 # Personal Notes.
 
 Useful site : https://modoocode.com/
