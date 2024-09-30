@@ -1,6 +1,6 @@
 // 240930 1 #16724
 // Class 5
-// 00:30
+// 01:10
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -13,6 +13,7 @@ class MY {
   vector<vector<char>> map;
   vector<vector<int>> isVisited;
   int safeZoneCnt = 0;
+  int checkCnt = 0;
 
   pair<int, int> move(const char &input) {
     switch (input) {
@@ -39,17 +40,17 @@ class MY {
     int row = rowStart, col = colStart;
 
     // Suppose that current loop is a new.
-    safeZoneCnt++;
+    checkCnt++;
 
     while (true) {
-      isVisited[row][col] = safeZoneCnt;
+      isVisited[row][col] = checkCnt;
       pair<int, int> next = move(map[row][col]);
       int rowNext = row + next.first, colNext = col + next.second;
 
       if (isVisited[rowNext][colNext] != 0) {
-        // Actually, current loop isn't new one. -> cnt--
-        if (isVisited[rowNext][colNext] != safeZoneCnt)
-          safeZoneCnt--;
+        // We are in a new Loop!
+        if (isVisited[rowNext][colNext] == checkCnt)
+          safeZoneCnt++;
 
         break;
       }
@@ -77,12 +78,9 @@ public:
     /** Travel the map : O(N^2)
      * 1. Visit every point. pass if it's already visited.
      * 2. do travel starting from [row][col]. make end as a SafeZone.
-     * * end: directing where isVisited[][] == true
+     * * end: directing where isVisited[][] != 0
      * 3 If what end directs is Safezone, just end the Loop
      * * Else, change the end into Safezone
-
-     * 4. Use isVisitedTemp and update original one after the travel,
-     * * in order to make a new safe zone only when new loop is started.
      */
     for (int row = 0; row < rowSize; row++)
       for (int col = 0; col < colSize; col++) {
