@@ -1,6 +1,6 @@
 // 241001 1 #20303
 // Class 5
-// 01:20
+// 01:40
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -66,7 +66,7 @@ public:
     for (int i = 0; i < childNum; i++)
       cin >> candy[i]; // [,1e4]
 
-    graph.resize(childNum, vector<int>(childNum));
+    graph.resize(childNum);
     for (int i = 0; i < relationNum; i++) {
       int first, second;
       cin >> first >> second;
