@@ -10,11 +10,14 @@
 using namespace std;
 
 class MY {
+  struct group {
+    int child, candy;
+  };
   int childNum, relationNum, childMin;
   vector<int> candy;
   vector<vector<int>> graph;
 
-  pair<int, int> BFS(const int &start, vector<bool> &isVisited) {
+  group BFS(const int &start, vector<bool> &isVisited) {
     int childCnt = 0, candyCnt = 0;
 
     queue<int> q;
@@ -38,8 +41,8 @@ class MY {
     return {childCnt, candyCnt};
   }
 
-  vector<pair<int, int>> findGroup() {
-    vector<pair<int, int>> result = {};
+  vector<group> findGroup() {
+    vector<group> result = {};
 
     vector<bool> isVisited(childNum, false);
     for (int i = 0; i < childNum; i++) {
@@ -88,7 +91,9 @@ public:
      */
 
     // 1.
-    const vector<pair<int, int>> candyGroup = findGroup();
+    const vector<group> candyGroup = findGroup();
+    candy.clear();
+    graph.clear();
 
     // 2.
     vector<int> dpTablePrev(childMin, 0), dpTable(childMin, 0);
@@ -96,14 +101,14 @@ public:
     for (int i = 0; i < candyGroup.size(); i++) {
       for (int num = 0; num < childMin; num++) {
         // 2-1.
-        if (candyGroup[i].first > num)
+        if (candyGroup[i].child > num)
           dpTable[num] = dpTablePrev[num];
 
         // 2-2.
         else {
           dpTable[num] =
-              max(dpTablePrev[num], dpTablePrev[num - candyGroup[i].first] +
-                                        candyGroup[i].second);
+              max(dpTablePrev[num],
+                  dpTablePrev[num - candyGroup[i].child] + candyGroup[i].candy);
         }
       }
 
