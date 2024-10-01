@@ -1,6 +1,6 @@
 // 241001 1 #20303
 // Class 5
-// 01:00
+// 01:20
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -39,7 +39,7 @@ class MY {
   }
 
   vector<pair<int, int>> findGroup() {
-    vector<pair<int, int>> result = {{0, 0}};
+    vector<pair<int, int>> result = {};
 
     vector<bool> isVisited(childNum, false);
     for (int i = 0; i < childNum; i++) {
@@ -83,29 +83,36 @@ public:
      * 2-2. Else, DP[i][j] = max(Previous, Suppose ith is selected)
      * * Max with ith selected: dptable[i-1][j-ith's childNum] + ith's candyNum
      * * Max of (i-1)th that has capacity to select ith + ith's candyNum
+
+     * Use a pair of 1D dpTables instead of 2D dpTable because of OOM.
      */
+
     // 1.
     const vector<pair<int, int>> candyGroup = findGroup();
 
     // 2.
-    vector<vector<int>> dpTable(candyGroup.size(), vector<int>(childMin, 0));
-    for (int i = 1; i < candyGroup.size(); i++) {
+    vector<int> dpTablePrev(childMin, 0), dpTable(childMin, 0);
+
+    for (int i = 0; i < candyGroup.size(); i++) {
       for (int num = 0; num < childMin; num++) {
         // 2-1.
         if (candyGroup[i].first > num)
-          dpTable[i][num] = dpTable[i - 1][num];
+          dpTable[num] = dpTablePrev[num];
 
         // 2-2.
         else {
-          dpTable[i][num] = max(dpTable[i - 1][num],
-                                dpTable[i - 1][num - candyGroup[i].first] +
-                                    candyGroup[i].second);
+          dpTable[num] =
+              max(dpTablePrev[num], dpTablePrev[num - candyGroup[i].first] +
+                                        candyGroup[i].second);
         }
       }
+
+      // update dpTable
+      dpTablePrev = dpTable;
     }
 
     /* Output */
-    cout << dpTable[candyGroup.size() - 1][childMin - 1];
+    cout << dpTable[childMin - 1];
   }
 };
 
