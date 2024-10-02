@@ -1,6 +1,6 @@
 // 241002 1 #10775
 // Class 5
-// 00:30
+// 00:40
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -31,17 +31,22 @@ public:
      * * when we can't find empty gate, Terminate the code.
 
      * O(N^2), Guess it causes the timeout...
+     * 4. Use a vector to save previous docked place.
      */
 
     int maxDocked = 0;
     vector<bool> isDocked(gateNum + 1, false);
     isDocked[0] = true;
+    vector<int> recentDocked(gateNum + 1);
+    for (int i = 0; i <= gateNum; i++)
+      recentDocked[i] = i + 1;
 
     for (int i = 0; i < planeNum; i++) {
-      int idx = gate[i];
+      int idx = recentDocked[gate[i]] - 1;
       while (idx > 0) {
         if (!isDocked[idx]) {
           isDocked[idx] = true;
+          recentDocked[gate[i]] = idx;
           maxDocked++;
           break;
         }
