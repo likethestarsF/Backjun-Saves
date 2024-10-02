@@ -1,6 +1,6 @@
 // 241002 1 #10775
 // Class 5
-// 00:
+// 00:30
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -19,25 +19,39 @@ public:
     /* Input */
     cin >> gateNum >> planeNum; // [,1e5]
 
-    gate.resize(gateNum + 1, 0);
+    gate.resize(planeNum);
     for (int i = 0; i < planeNum; i++) {
-      int input;
-      cin >> input;
-      gate[input]++;
+      cin >> gate[i];
     }
 
     /** Main
-     * 1. Add plane starting from smaller number.
-     * 2. only ith MaxDocked = min(ithPlaneNumber, 'i');
-     * 3. Consider the previous.
-     * * ith MaxDocked = prevDocked + min('i' - prevDocked, ithPlaneNumber);
-     * * = min(ithPlaneNumber + prevDocked, 'i');
-     * * -> MaxDocked += min(i-prevDocked, ithPlaneNumber);
+     * 1. Base on input, Dock at most bigger case, sequentially.
+     * 2. Save docked place by isDocked.
+     * 3. Find the empty place to dock in the reverse-order.
+     * * when we can't find empty gate, Terminate the code.
+
+     * O(N^2), Guess it causes the timeout...
      */
 
     int maxDocked = 0;
-    for (int i = 1; i <= gateNum; i++)
-      maxDocked += min(i - maxDocked, gate[i]);
+    vector<bool> isDocked(gateNum + 1, false);
+    isDocked[0] = true;
+
+    for (int i = 0; i < planeNum; i++) {
+      int idx = gate[i];
+      while (idx > 0) {
+        if (!isDocked[idx]) {
+          isDocked[idx] = true;
+          maxDocked++;
+          break;
+        }
+
+        idx--;
+      }
+
+      if (idx == 0)
+        break;
+    }
 
     cout << maxDocked;
   }
