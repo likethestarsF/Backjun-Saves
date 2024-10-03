@@ -55,6 +55,7 @@ public:
 
           cout << blank(n - 3);
           cout << line[i];
+          cout << blank(n - 3);
           endl();
         }
 
@@ -73,6 +74,7 @@ public:
         // Printing a line
         cout << blank(n - 3 - (down / 3) * 3);
         cout << line[down];
+        cout << blank(n - 3 - (down / 3) * 3);
         endl();
         idx++;
       }
