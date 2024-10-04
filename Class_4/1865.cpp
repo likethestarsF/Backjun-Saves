@@ -1,10 +1,11 @@
 // 241004 1 #1865
 // Class 5
-// 00:
+// 01:20
 #include <algorithm>
 #include <iostream>
 #include <vector>
-#define INF 2147483647
+#define INF 1e8
+// #define MAX 2147483647
 // #define ll long long
 using namespace std;
 
@@ -57,11 +58,11 @@ public:
     vector<int> minDist(vertexNum, INF);
     minDist[0] = 0;
     // 3.
-    for (int repeat = 0; repeat < vertexNum; repeat++) {
+    for (int repeat = 0; repeat < vertexNum - 1; repeat++) {
       // 3-1.
       for (const edge &e : graph) {
-        if (minDist[e.start] == INF)
-          continue;
+        // if (minDist[e.start] == INF)
+        //   continue;
 
         // 3-2.
         minDist[e.end] = min(minDist[e.end], minDist[e.start] + e.time);
@@ -71,8 +72,8 @@ public:
     // 4.
     bool isNegCycle = false;
     for (const edge &e : graph) {
-      if (minDist[e.start] == INF)
-        continue;
+      // if (minDist[e.start] == INF)
+      //   continue;
 
       if (minDist[e.end] > minDist[e.start] + e.time) {
         isNegCycle = true;
