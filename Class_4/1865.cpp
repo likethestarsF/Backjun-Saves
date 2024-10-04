@@ -29,6 +29,7 @@ public:
       start--, end--;
 
       graph.push_back({start, end, time});
+      graph.push_back({end, start, time});
     }
 
     for (int i = 0; i < wormholeNum; i++) {
