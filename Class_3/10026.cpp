@@ -139,8 +139,7 @@ public:
 
     /** BFS
      * 1. label each groups by BFS
-     * 2. label once more R=G
-     * >> This would probably be a timeout case.
+     * 2. label once more regarding Red=Green
      */
 
     cout << BFS() << ' ';
