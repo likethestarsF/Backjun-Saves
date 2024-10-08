@@ -84,9 +84,9 @@ class MY {
 
     // Block 4
     // 4-1
-    if (row + 2 < rowSize && col + 2 < colSize) {
+    if (row + 2 < rowSize && col + 1 < colSize) {
       const int dRow[] = {0, 1, 1, 2};
-      const int dCol[] = {0, 0, 1, 2};
+      const int dCol[] = {0, 0, 1, 1};
       int localMax = 0;
       for (int i = 0; i < 4; i++)
         localMax += map[row + dRow[i]][col + dCol[i]];
