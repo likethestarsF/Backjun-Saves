@@ -1,6 +1,6 @@
 // 241009 1 #1918
 // Class 4
-// 00:
+// 00:30
 #include <algorithm>
 #include <iostream>
 #include <stack>
@@ -47,8 +47,21 @@ public:
         }
       }
 
-      else if (*input == '*' || *input == '/')
+      else if (*input == '*' || *input == '/') {
+        while (!s.empty()) {
+          const char cur = s.top();
+
+          if (cur == '(')
+            break;
+
+          if (cur == '+' || cur == '-')
+            break;
+
+          cout << cur;
+          s.pop();
+        }
         s.push(*input);
+      }
 
       else if (*input == '+' || *input == '-') {
         while (!s.empty()) {
