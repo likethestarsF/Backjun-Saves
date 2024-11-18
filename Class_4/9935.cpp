@@ -1,6 +1,6 @@
 // 241118 1 #9935
 // Class 4
-// 00:50
+// 01:00
 #include <algorithm>
 #include <iostream>
 #include <stack>
@@ -12,64 +12,49 @@ using namespace std;
 
 class MY {
   string input, explosive;
-  vector<bool> isRemain;
-
-  void findExplosive(int idxInput) {
-    vector<int> deleted = {};
-    // find explosive strings based on the isRemain
-    int idxExplosive = 0;
-    while (idxExplosive < explosive.length()) {
-      if (idxInput >= input.length())
-        return;
-
-      if (!isRemain[idxInput])
-        idxInput++;
-
-      else if (input[idxInput] == explosive[idxExplosive]) {
-        // isRemain[indInput] = false;
-        deleted.push_back(idxInput);
-
-        idxInput++;
-        idxExplosive++;
-      }
-
-      else
-        return;
-    }
-
-    // update isRemain
-    for (const int &target : deleted)
-      isRemain[target] = false;
-  }
 
 public:
   MY() {
     /* Input */
     cin >> input;     // [,1e6]
     cin >> explosive; // [,36]
-
-    isRemain.resize(input.size(), true);
   }
 
   void body() {
+    stack<char> s = {};
+    // push unless we find explosive.back()
+    for (int i = 0; i < input.length(); i++) {
+      s.push(input[i]);
 
-    // find explosives in the input and update isRemain
-    for (int i = input.length() - 1; i >= 0; i--) {
-      if (input[i] == explosive[0])
-        findExplosive(i);
+      if (input[i] == explosive.back())
+        if (s.size() >= explosive.length()) {
+
+          string sample;
+          sample.resize(explosive.length());
+          for (int i = explosive.length() - 1; i >= 0; i--) {
+            sample[i] = s.top();
+            s.pop();
+          }
+
+          if (sample != explosive)
+            for (int i = 0; i < sample.size(); i++)
+              s.push(input[i]);
+        }
     }
 
     /* Output */
-    int flag = true;
-    for (int i = 0; i < input.length(); i++) {
-      if (isRemain[i]) {
-        cout << input[i];
-        flag = false;
-      }
-    }
-
-    if (flag)
+    if (s.empty())
       cout << "FRULA";
+    else {
+      vector<char> result = {};
+      while (!s.empty()) {
+        result.push_back(s.top());
+        s.pop();
+      }
+
+      for (int i = result.size() - 1; i >= 0; i--)
+        cout << result[i];
+    }
   }
 };
 
