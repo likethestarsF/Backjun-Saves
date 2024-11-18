@@ -1,6 +1,6 @@
 // 241118 1 #9935
 // Class 4
-// 00:40
+// 00:50
 #include <algorithm>
 #include <iostream>
 #include <stack>
@@ -14,38 +14,32 @@ class MY {
   string input, explosive;
   vector<bool> isRemain;
 
-  bool findExplosive(int idxInput) {
+  void findExplosive(int idxInput) {
+    vector<int> deleted = {};
     // find explosive strings based on the isRemain
     int idxExplosive = 0;
     while (idxExplosive < explosive.length()) {
       if (idxInput >= input.length())
-        return false;
+        return;
 
       if (!isRemain[idxInput])
         idxInput++;
 
       else if (input[idxInput] == explosive[idxExplosive]) {
+        // isRemain[indInput] = false;
+        deleted.push_back(idxInput);
+
         idxInput++;
         idxExplosive++;
       }
 
       else
-        return false;
+        return;
     }
 
-    return true;
-  }
-
-  void updateIsRemain(int cur) {
-    int updated = 0;
-
-    while (updated < explosive.length()) {
-      if (isRemain[cur]) {
-        isRemain[cur] = false;
-        updated++;
-      }
-      cur++;
-    }
+    // update isRemain
+    for (const int &target : deleted)
+      isRemain[target] = false;
   }
 
 public:
@@ -58,32 +52,24 @@ public:
   }
 
   void body() {
-    // find starting points
-    const char key = explosive[0];
-    vector<int> list = {};
 
-    for (int i = 0; i < input.size(); i++) {
-      if (input[i] == key)
-        list.push_back(i);
-    }
-
-    // find explosives and update isRemain
-    for (int cur = list.size() - 1; cur >= 0; cur--) {
-      if (findExplosive(list[cur]))
-        updateIsRemain(list[cur]);
+    // find explosives in the input and update isRemain
+    for (int i = input.length() - 1; i >= 0; i--) {
+      if (input[i] == explosive[0])
+        findExplosive(i);
     }
 
     /* Output */
-    string result = "";
-    for (int i = 0; i < input.size(); i++) {
-      if (isRemain[i])
-        result += input[i];
+    int flag = true;
+    for (int i = 0; i < input.length(); i++) {
+      if (isRemain[i]) {
+        cout << input[i];
+        flag = false;
+      }
     }
 
-    if (result == "")
+    if (flag)
       cout << "FRULA";
-    else
-      cout << result;
   }
 };
 
