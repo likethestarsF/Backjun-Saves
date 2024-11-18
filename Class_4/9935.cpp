@@ -1,6 +1,6 @@
 // 241118 1 #9935
 // Class 4
-// 01:00
+// 02:00
 #include <algorithm>
 #include <iostream>
 #include <stack>
@@ -26,25 +26,25 @@ public:
     for (int i = 0; i < input.length(); i++) {
       s.push(input[i]);
 
-      if (input[i] == explosive.back())
-        if (s.size() >= explosive.length()) {
-
-          string sample;
-          sample.resize(explosive.length());
-          for (int i = explosive.length() - 1; i >= 0; i--) {
-            sample[i] = s.top();
-            s.pop();
-          }
-
-          if (sample != explosive)
-            for (int i = 0; i < sample.size(); i++)
-              s.push(input[i]);
+      if (input[i] == explosive.back() && s.size() >= explosive.length()) {
+        string sample;
+        sample.resize(explosive.length());
+        for (int i = explosive.length() - 1; i >= 0; i--) {
+          sample[i] = s.top();
+          s.pop();
         }
+
+        if (sample != explosive) {
+          for (int i = 0; i < sample.length(); i++)
+            s.push(sample[i]);
+        }
+      }
     }
 
     /* Output */
     if (s.empty())
       cout << "FRULA";
+
     else {
       vector<char> result = {};
       while (!s.empty()) {
