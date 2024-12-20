@@ -20,7 +20,7 @@ class MY {
     for (int start = 0; start < size; start++) {
       const char *cur = &board[row][start];
 
-      // 1. check the prev
+      // check the prev to optimize
       if (start != 0 && board[row][start - 1] == *cur)
         continue;
 
@@ -33,13 +33,20 @@ class MY {
 
         // swap is possible
         else if (oneCoin) {
-          // boundary check
+          // 1. boundary check and swap adjacents
           if ((row != 0 && board[row - 1][i] == *cur) ||
               (row != size - 1 && board[row + 1][i] == *cur)) {
             curLength++;
             oneCoin = false;
           }
 
+          // 2.jump one candy
+          else if (row + 2 < size && board[row + 2][i] == *cur) {
+            curLength++;
+            break;
+          }
+
+          // 3. stop
           else
             break;
         }
@@ -58,8 +65,8 @@ class MY {
     for (int start = 0; start < size; start++) {
       const char *cur = &board[start][col];
 
-      // 1. check the prev
-      if (start != 0 && board[start][col - 1] == *cur)
+      // check the prev to optimize
+      if (start != 0 && board[start - 1][col] == *cur)
         continue;
 
       int curLength = 1;
@@ -71,13 +78,20 @@ class MY {
 
         // swap is possible
         else if (oneCoin) {
-          // boundary check
-          if ((col != 0 && board[i][col] == *cur) ||
+          // 1. boundary check and swap adjacents
+          if ((col != 0 && board[i][col - 1] == *cur) ||
               (col != size - 1 && board[i][col + 1] == *cur)) {
             curLength++;
             oneCoin = false;
           }
 
+          // 2.jump one candy
+          else if (col + 2 < size && board[i][col + 2] == *cur) {
+            curLength++;
+            break;
+          }
+
+          // 3. stop
           else
             break;
         }
