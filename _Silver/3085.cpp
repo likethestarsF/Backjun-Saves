@@ -1,6 +1,6 @@
 // 241220 1 #3085
 // Random Marathon 29 H
-// 00:20
+// 00:40
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -19,6 +19,7 @@ class MY {
     int maxLength = 0;
     for (int start = 0; start < size; start++) {
       const char *cur = &board[row][start];
+      bool oneCoin = true;
 
       // check the prev to optimize
       if (start != 0 && board[row][start - 1] == *cur)
@@ -26,7 +27,7 @@ class MY {
 
       int curLength = 1;
 
-      bool oneCoin = true;
+      // default
       for (int i = start + 1; i < size; i++) {
         if (board[row][i] == *cur)
           curLength++;
@@ -37,13 +38,13 @@ class MY {
           if ((row != 0 && board[row - 1][i] == *cur) ||
               (row != size - 1 && board[row + 1][i] == *cur)) {
             curLength++;
-            oneCoin = false;
+            break;
           }
 
           // 2.jump one candy
-          else if (row + 2 < size && board[row + 2][i] == *cur) {
+          else if (i + 1 < size && board[row][i + 1] == *cur) {
             curLength++;
-            break;
+            oneCoin = false;
           }
 
           // 3. stop
@@ -55,15 +56,29 @@ class MY {
           break;
       }
       maxLength = max(maxLength, curLength);
+
+      // special case
+      if (start - 2 >= 0 && board[row][start - 2] == *cur) {
+        curLength = 2;
+
+        for (int i = start + 1; i < size; i++) {
+          if (board[row][i] == *cur)
+            curLength++;
+
+          else
+            break;
+        }
+        maxLength = max(maxLength, curLength);
+      }
     }
 
     return maxLength;
   }
-
   int checkVertical(const int &col) {
     int maxLength = 0;
     for (int start = 0; start < size; start++) {
       const char *cur = &board[start][col];
+      bool oneCoin = true;
 
       // check the prev to optimize
       if (start != 0 && board[start - 1][col] == *cur)
@@ -71,7 +86,7 @@ class MY {
 
       int curLength = 1;
 
-      bool oneCoin = true;
+      // default
       for (int i = start + 1; i < size; i++) {
         if (board[i][col] == *cur)
           curLength++;
@@ -86,7 +101,7 @@ class MY {
           }
 
           // 2.jump one candy
-          else if (col + 2 < size && board[i][col + 2] == *cur) {
+          else if (i + 1 < size && board[i + 1][col] == *cur) {
             curLength++;
             break;
           }
@@ -100,6 +115,20 @@ class MY {
           break;
       }
       maxLength = max(maxLength, curLength);
+
+      // special case
+      if (start - 2 >= 0 && board[start - 2][col] == *cur) {
+        curLength = 2;
+
+        for (int i = start + 1; i < size; i++) {
+          if (board[i][col] == *cur)
+            curLength++;
+
+          else
+            break;
+        }
+        maxLength = max(maxLength, curLength);
+      }
     }
 
     return maxLength;
