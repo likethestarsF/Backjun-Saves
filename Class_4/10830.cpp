@@ -12,11 +12,11 @@ using namespace std;
 
 class MY {
   ll size, exponent;
-  vector<vector<int>> matrix;
+  vector<vector<ll>> matrix;
 
   template <typename T> T multiply(const T &mat_1, const T &mat_2) {
     T result;
-    result.resize(size, vector<int>(size, 0));
+    result.resize(size, vector<ll>(size, 0));
 
     for (int row = 0; row < size; row++) {
       for (int col = 0; col < size; col++) {
@@ -30,7 +30,7 @@ class MY {
     return result;
   }
 
-  template <typename T> T power(const T &matrix, const int &n) {
+  template <typename T> T power(const T &matrix, const ll &n) {
     if (n == 1)
       return matrix;
 
@@ -39,15 +39,14 @@ class MY {
       return multiply(half, half);
     }
 
-    else {
+    else
       return multiply(power(matrix, n - 1), matrix);
-    }
   }
 
 public:
   MY() {
     cin >> size >> exponent; // [2,5], [1,1e11]
-    matrix.resize(size, vector<int>(size, 0));
+    matrix.resize(size, vector<ll>(size, 0));
   }
 
   void body() {
@@ -57,7 +56,7 @@ public:
         cin >> matrix[r][c]; // [,1000]
 
     /* Process */
-    vector<vector<int>> answer = power(matrix, exponent);
+    vector<vector<ll>> answer = power(matrix, exponent);
 
     /* Output */
     for (int i = 0; i < size; i++) {
