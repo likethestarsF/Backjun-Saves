@@ -1,6 +1,6 @@
 // 241223 1 #10830
 // Class 4
-// 00:20
+// 00:30
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -61,7 +61,7 @@ public:
     /* Output */
     for (int i = 0; i < size; i++) {
       for (int j = 0; j < size; j++)
-        cout << answer[i][j] << ' ';
+        cout << answer[i][j] % 1000 << ' ';
       cout << '\n';
     }
   }
